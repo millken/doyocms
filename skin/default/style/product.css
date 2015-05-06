@@ -1,0 +1,10 @@
+#flash-box #bigimg{ width:300px; height:300px;}
+#flash-box .biggo{filter: alpha(opacity=0); opacity: 0;}
+#flash-box #bigimg img{ width:300px; height:300px;}
+#flash-box .pn{ width:300px; height:50px; padding-top:5px;}
+#flash-box .pn p,#flash-box .pn span{ float:left; width:20px; height:50px;background:url(../images/flashboxp.gif) no-repeat; overflow:hidden;}
+#flash-box .pn span{background-position:-20px 0;}
+#flash-box .pn ul{float:left;width:252px;height:50px; overflow:hidden; padding:0 4px; }
+#flash-box .pn ul li{ float:left;width:50px;height:50px; display:inline; margin:0 2px; overflow:hidden;}
+#flash-box .pn ul li img{height:48px; border:1px solid #FFF}
+#flash-box .pn ul li.c img{border:1px solid #06C}

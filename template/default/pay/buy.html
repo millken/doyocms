@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支付中心-{$GLOBALS['S']['title']}</title>
+<meta name="keywords" content="{$type['keywords']} " />
+<meta name="description" content="{$type['description']} " />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>在线客服</h2></div>
+      <div class="columncl">
+            <a>Tel :0719-8689805</a>
+            <a>Email :hi@wdoyo.com</a>
+            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2373088201&site=qq&menu=yes">客服1：<img border="0" src="http://wpa.qq.com/pa?p=2:2373088201:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1522066607&site=qq&menu=yes">客服2：<img border="0" src="http://wpa.qq.com/pa?p=2:1522066607:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2514159326&site=qq&menu=yes">客服3：<img border="0" src="http://wpa.qq.com/pa?p=2:2514159326:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：{$positions}</div>
+       <div class="member_f">
+<form action="{$GLOBALS['WWW']}index.php?c=pay&a=pay&id={$order[id]}" method="post" id="pay">
+       <dl><table class="ordertab" style="margin:10px 0;">
+		  <tr class="trbg">
+            <td>商品</td>
+            <td>单价</td>
+            <td>数量</td>
+            <td>物流</td>
+            <td>小计</td>
+          </tr>
+          {foreach $goods as $v}
+          <tr>
+            <td class="left"><strong><a href="index.php?c=product&id={$v['aid']}" target="_blank">{$v['title']}</a></strong><br />{$v['attribute_txt']}</td>
+            <td id="price">{if($v['discount'])}原价：{$v['discount'][0]}元<br />{$my['group']['name']}{$v['discount'][1]} 实付 {/if}<strong>{$v['price']}</strong>元</td>
+            <td>{$v['quantity']}</td>
+            <td>{if($order['virtual']!=1)}{$order['logistics']}<br />{$v['logistics_price']}元{else}自动发货{/if}</td>
+            <td id="total" class="dprice">{$v['total']}元</td>
+          </tr>
+          {/foreach}
+        </table>
+        <table width="100%">
+          <tr>
+            <td style="line-height:200%"><div style="float:right">
+            <strong>合计</strong>：<span class="aggregate">{$total}</span>元{if($order['virtual']!=1)}(含运费){/if}
+            {if($order['favorable']!=0.00)}
+            <br /><strong>优惠</strong>：<span class="aggregate">-{$order[favorable]}</span>元
+            {/if}</div></td>
+          </tr>
+        </table>
+		</dl>
+       <dl><dt>订单号为：</dt><dd><span style="font-size:16px; color:#06C; font-family:Verdana, Geneva, sans-serif">{$order[orderid]}</span></dd></dl>
+       <dl><dt>支付金额：</dt><dd class="aggregate">{$aggregate} 元</dd></dl>
+       <dl><dt>支付方式：</dt><dd>
+       {if($payment)}
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+         {foreach $payment as $v}
+          <tr>
+            <td width="30"><input name="payment" id="payment_{$v['pay']}" type="radio" value="{$v['pay']}" {if($v['n']==1)}checked="checked"{/if} /></td>
+            <td style="padding:5px;font-size:14px; font-weight:bold"><label for="payment_{$v['pay']}">{if($v['pay']=='offline'||$v['pay']=='cashbalance')}{$v['name']}{else}<img src="{$GLOBALS['WWW']}include/payment/{$v['pay']}.gif" style="cursor:pointer" />{/if}</label></td>
+          </tr>
+         {/foreach}
+        {else}
+        未设置支付平台，暂无法购买。
+        {/if}
+        </table>
+       </dd></dl>
+       <dl style="border:0;"><dt>&nbsp;</dt><dd><input type="submit" value="立即支付" class="btnbig" /></dd></dl>
+</form>
+{if($order['virtual']!=1)}
+       <dl style="font-weight:bold; line-height:26px; background-color:#F6F6F6;">&nbsp;&nbsp;以下为您填写的收货信息：</dl>
+       <dl><dt>真实姓名：</dt><dd>{$order[info][name]}</dd></dl>
+       <dl><dt>手机：</dt><dd>{$order[info][phone]}</dd></dl>
+       <dl><dt>固定电话：</dt><dd>{$order[info][tel]}</dd></dl>
+       <dl><dt>Email：</dt><dd>{$order[info][email]}</dd></dl>
+       <dl><dt>邮编：</dt><dd>{$order[info][zipcode]}</dd></dl>
+       <dl><dt>所在省：</dt><dd>{$order[info][address1]}</dd></dl>
+       <dl><dt>所在市：</dt><dd>{$order[info][address2]}</dd></dl>
+       <dl><dt>详细地址：</dt><dd>{$order[info][address]}</dd></dl>
+       <dl><dt>留言：</dt><dd>{$order[unote]}</dd></dl>
+{/if}
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$channel['title']}</title>
+<meta name="keywords" content="{$channel['keywords']}" />
+<meta name="description" content="{$channel['description']}" />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>{$type['classname']}</h2></div>
+      <div class="columncl">
+      {loop table="classtype" pid="$type["tid"]" mshow="1" not="1" as="t"}
+      <a href="{$t['url']}"{if($type['tid']==$t['tid'])} class="c"{/if}>{$t['classname']} </a>
+      {/loop}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+		<div class="position">当前位置：{$positions}</div>
+		<div class="c"><h1>{$channel['title']}</h1></div>
+		<div class="c t">发布时间：{fun date('Y-m-d H:i:s',$channel['addtime'])} 点击：<script src="{$GLOBALS['WWW']}index.php?c=channel&a=hits&molds={$molds}&id={$channel['id']}" type="text/javascript"></script></div>
+		<div class="c">
+        <table class="ordertab">
+          {foreach $fields as $v}
+          <tr>
+            <td class="left" style="background-color: #F2F2F2; color:#333"><strong>{$v['fieldsname']}</strong> 
+            调用标识：{if($v['fieldstype']=='select'||$v['fieldstype']=='checkbox')}
+            <?php echo '{'.'fun fieldsinfo("'.$v['fields'].'",$channel["'.$v['fields'].'"],$molds)'.'}';?>
+            {else}
+            <?php echo '{'.'$channel['.$v['fields'].']}'.'}';?>
+            {/if}
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+            {if($v['fieldstype']=='select'||$v['fieldstype']=='checkbox')}
+            {fun fieldsinfo($v['fields'],$channel[$v['fields']],$molds)}
+            {else}
+            {$channel[$v['fields']]}
+            {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        </div>
+        <div class="c"><ul class="pages">{$pages}</ul></div>
+        <div class="c prev">
+        	{if($aprev)}上一篇：<a href="{$aprev['url']}">{$aprev['title']}</a>{/if}
+            {if($anext)}下一篇：<a href="{$anext['url']}">{$anext['title']}</a>{/if}
+        </div>
+	</div>
+       <div class="comment">
+         <div class="t c">文章评论</div>
+         <div class="i c">
+<script type="text/javascript">
+function comment_ret(){
+	if(document.comment.body.value.length==''){alert("请输入评论内容！");return false;}
+	if(document.comment.vercode.value.length==''){alert("请输入验证码！");return false;}
+	if(document.comment.body.value.length>500){alert("评论内容不能超过500字！");return false;}
+}
+</script>
+         <form method="post" action="{$GLOBALS['WWW']}index.php?c=comment&m={$molds}" name="comment" onsubmit="return comment_ret()">
+         <input name="aid" type="hidden" value="{$channel['id']}" />
+         <dl><dt>内容:</dt><dd><textarea name="body" style="width:500px; height:50px;" class="inp"></textarea></dd></dl>
+         <dl>
+         {if($GLOBALS['G_DY']['vercode']==1)}
+         <dt>验证码:</dt><dd><input name="vercode" type="text" style="width:50px;" class="inp" /></dd><dd><img src="{$GLOBALS['WWW']}include/vercode.php" id="vercodeimg" width="58" height="24" onclick="newvercode();" style="cursor:pointer;" /></dd>
+    <script type="text/javascript">
+	setTimeout('newvercode()',1000);
+    function newvercode(){
+        document.getElementById("vercodeimg").src=site_dir+"include/vercode.php?a="+Math.random();
+    }
+    </script>
+         {else}<dt>&nbsp;</dt>{/if}
+         <dd><input name="" type="submit" value="提交" class="btnmini" /></dd></dl>
+         </form>
+         </div>
+         <script type="text/javascript">ajax_comment('comment','{$molds}',{$channel['id']},1,'person/ajax_comment.html');</script>
+         <div id="comment"></div>
+       </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

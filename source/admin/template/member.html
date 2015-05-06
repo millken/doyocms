@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<?php if($postgo=='add'||$postgo=='edit'){ ?>
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("#fieldsinfo").append("<dl><dt>&nbsp;</dt><dd><img src='include/js/doyoupload/loading.gif' /></dd>");
+	$.ajax({
+		url: '?c=a_fields&a=info',type: 'post',
+		cache: false,
+		data: "molds=member&id=<?php echo $d['id'];?>",
+		success: function(html){
+			$("#fieldsinfo").empty();
+			$("#fieldsinfo").append(html);
+		}
+	});
+});
+</script>
+<?php } ?>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><a href="?c=a_member">会员管理</a><a href="?c=a_member&a=add">添加会员</a><a href="?c=a_member&a=glist">会员分组管理</a><a href="?c=a_member&a=gadd">添加会员分组</a><a href="?c=a_fields&molds=member">字段管理</a></div>
+<?php if($postgo=='add'||$postgo=='edit'){ ?>
+	<div class="info">
+    <form action="?c=a_member&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="id" type="hidden" value="<?php echo $d['id'] ?>" />
+
+    <dl style="border:0;"><dt>用户名称：</dt><dd><?php if($postgo=='add'){ ?>
+    <input name="user" type="text" class="int" /></dd><dd class="t">最大长度20，支持中英文数字</dd>
+    <?php }else{ echo $d['user'];?><input name="user" type="hidden" value="<?php echo $d['user'] ?>" /><?php } ?>
+    </dl>
+    <dl><dt>用户密码：</dt><dd><input name="pass" type="password" class="int" /></dd><?php if($postgo!='add')echo '<dd class="t">不修改请留空</dd>'; ?></dl>
+    <dl><dt>邮箱：</dt><dd><input name="email" type="text" class="int" value="<?php echo $d['email'] ?>" /></dd><dd class="t">可留空</dd></dl>
+    <?php if(funsinfo('pay','isshow')==1){ ?>
+    <dl><dt>现金余额：</dt><dd><?php echo $d['money'] ?></dd><dd><a href="?c=a_pay&a=accountadd&uid=<?php echo $d['id'] ?>">录入款项</a></dd></dl>
+    <?php } ?>
+    <dl><dt>会员分组：</dt><dd><select name="gid">
+        <?php foreach($glista as $v){if($v['gid']!=1){ ?>
+            <option value="<?php echo $v['gid'] ?>"<?php if($d['gid']==$v['gid'])echo ' selected="selected"'; ?>><?php echo $v['weight'] ?>级—<?php echo $v['name'] ?></option>
+        <?php }} ?>
+    </select></dd></dl>
+    <span id="fieldsinfo"></span>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+<?php } ?>
+<?php if($postgo==''){ ?>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td width="40">ID</td>
+        <td>用户名</td>
+        <td width="150">操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td><?php echo $v['id']; ?></td>
+        <td class="tdleft"><a href="?c=a_member&a=edit&id=<?php echo $v['id']; ?>"><?php echo $v['user']; ?></a></td>
+        <td><a href="?c=a_member&a=edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<a href="?c=a_member&a=del&id=<?php echo $v['id']; ?>">删除</a></td>
+      </tr>
+    <?php } ?>
+    </table>
+<?php } ?>
+<?php if($postgo=='gadd'||$postgo=='gedit'){ ?>
+	<div class="info">
+    <form action="?c=a_member&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="gid" type="hidden" value="<?php echo $d['gid'] ?>" />
+    <dl style="border:0;"><dt>分组名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $d['name'] ?>" /></dd><dd class="t">最大长度20，支持中英文数字</dd></dl>
+    <?php if($d['sys']==0){ ?>
+    <dl><dt>分组级别：</dt><dd><select name="weight">
+      <option value="1"<?php if($d['weight']==1)echo ' selected="selected"'; ?>>1级</option>
+      <option value="2"<?php if($d['weight']==2)echo ' selected="selected"'; ?>>2级</option>
+      <option value="3"<?php if($d['weight']==3)echo ' selected="selected"'; ?>>3级</option>
+      <option value="4"<?php if($d['weight']==4)echo ' selected="selected"'; ?>>4级</option>
+      <option value="5"<?php if($d['weight']==5)echo ' selected="selected"'; ?>>5级</option>
+      <option value="6"<?php if($d['weight']==6)echo ' selected="selected"'; ?>>6级</option>
+      <option value="7"<?php if($d['weight']==7)echo ' selected="selected"'; ?>>7级</option>
+      <option value="8"<?php if($d['weight']==8)echo ' selected="selected"'; ?>>8级</option>
+      <option value="9"<?php if($d['weight']==9)echo ' selected="selected"'; ?>>9级</option>
+      <option value="10"<?php if($d['weight']==10)echo ' selected="selected"'; ?>>10级</option>
+    </select></dd><dd class="t">越大权限越高，大级别拥有下级全部权限</dd></dl>
+    <?php }else{ ?>
+    <input name="weight" type="hidden" value="<?php echo $d['weight']; ?>" />
+    <?php } ?>
+    <dl><dt>是否允许投稿：</dt><dd><label><input name="submit" type="radio" value="1"<?php if($d['submit']==1)echo ' checked="checked"' ?> />是</label> <label><input type="radio" name="submit" value="0"<?php if($d['submit']==0 || $postgo=='add')echo ' checked="checked"' ?> />否</label> </dd></dl>
+    <dl><dt>投稿默认审核：</dt><dd><label><input name="audit" type="radio" value="1"<?php if($d['audit']==1)echo ' checked="checked"' ?> />已审</label> <label><input type="radio" name="audit" value="0"<?php if($d['audit']==0 || $postgo=='add')echo ' checked="checked"' ?> />未审</label> </dd><dd class="t">本组会员发布内容默认是否审核</dd></dl>
+    <dl><dt>允许上传类型：</dt><dd><input name="filetype" type="text" class="int" value="<?php if($d['filetype']!=''){echo $d['filetype'];}else{echo 'jpg,gif,jpeg,png';} ?>" style="width:300px;"/></dd><dd class="t">多个类型用,分割</dd></dl>
+    <dl><dt>上传单个最大：</dt><dd><input name="filesize" type="text" class="int" value="<?php if($d['filesize']!=''){echo round($d['filesize']);}else{echo 200;} ?>" style="width:60px;"/> K</dd><dd class="t">本组单个会员上传附件单个大小限制</dd></dl>
+    <dl><dt>上传总量最大：</dt><dd><input name="fileallsize" type="text" class="int" value="<?php if($d['fileallsize']!=''){echo round($d['fileallsize']);}else{echo 5000;} ?>" style="width:60px;"/> K</dd><dd class="t">本组单个会员上传附件总共大小限制</dd></dl>
+    <?php if(funsinfo('pay','isshow')==1&&funsinfo('goods','isshow')==1){ ?>
+    <dl><dt>消费优惠：</dt><dd><select name="discount_type">
+      <option value="0"<?php if($d['discount_type']==0)echo ' selected="selected"'; ?>>无优惠</option>
+      <option value="1"<?php if($d['discount_type']==1)echo ' selected="selected"'; ?>>折扣</option>
+      <option value="2"<?php if($d['discount_type']==2)echo ' selected="selected"'; ?>>直减</option>
+    </select></dd><dd><input name="discount" type="text" class="int" value="<?php echo $d['discount'] ?>" style="width:60px;"/></dd><dd class="t">选择折扣请填写折扣率，如9.1折即填写“9.1”。选择直减请填写减少金额，如直接减少1.21元即填写“1.21”</dd></dl>
+    <?php } ?>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+<?php } ?>
+<?php if($postgo=='glist'){ ?>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td width="40">ID</td>
+        <td>分组名称</td>
+        <td width="150">操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td><?php echo $v['gid']; ?></td>
+        <td class="tdleft"><a href="?c=a_member&a=gedit&gid=<?php echo $v['gid']; ?>"><?php echo $v['name']; ?></a></td>
+        <td><a href="?c=a_member&a=gedit&gid=<?php echo $v['gid']; ?>">编辑</a><?php if($v['sys']==0){ ?>&nbsp;&nbsp;
+    <a href="?c=a_member&a=gdel&gid=<?php echo $v['gid']; ?>">删除</a><?php } ?></td>
+      </tr>
+    <?php } ?>
+    </table>
+<?php } ?>
+</div>
+</body>
+</html>

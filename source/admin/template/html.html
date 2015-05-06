@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$(".tid option[class='hidden']").remove();
+});
+function click_go(){
+	winboxgo('<img src="include/js/doyoupload/loading.gif" /> <strong>正在生成静态文件，请稍后...</strong>','b');
+}
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main">
+	<div class="info">
+    <?php if(!function_exists('curl_init')){ ?>
+    <dl style="border:0; padding-bottom:10px; color:#C00">您的主机未开启curl函数，将导致html生成效率降低，并可能出现部分生成不完整。强烈建议开启curl函数支持！</dl>
+    <?php } ?>
+    <form action="?c=a_html&a=clear&t=1" method="post"><input name="molds" type="hidden" value="article" />
+    <dl><dt><?php echo moldsinfo('article','moldname'); ?>：</dt><dd><select name="tid" class="tid">
+    	<option value=''>所有栏目</option>
+        <?php foreach($typesdb as $v){ ?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!='article')echo ' class="hidden"' ?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+        <?php } ?>
+    </select></dd><dd>指定ID范围：</dd><dd><input name="id1" type="text" class="int" style="width:30px;" /> - <input name="id2" type="text" class="int" style="width:30px;" /></dd>
+    <dd><input type="submit" value="更新html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd>
+    </dl>
+    </form>
+    <form action="?c=a_html&a=clear&t=1" method="post"><input name="molds" type="hidden" value="product" />
+    <dl style="padding:10px 0"><dt><?php echo moldsinfo('product','moldname'); ?>：</dt><dd><select name="tid" class="tid">
+    	<option value=''>所有栏目</option>
+        <?php foreach($typesdb as $v){ ?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!='product')echo ' class="hidden"' ?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+        <?php } ?>
+    </select></dd><dd>指定ID范围：</dd><dd><input name="id1" type="text" class="int" style="width:30px;" /> - <input name="id2" type="text" class="int" style="width:30px;" /></dd>
+    <dd><input type="submit" value="更新html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd>
+    </dl>
+    </form>
+    
+    <?php foreach($channel as $c){ ?>
+    <form action="?c=a_html&a=clear&t=1" method="post"><input name="molds" type="hidden" value="<?php echo $c['molds']; ?>" />
+    <dl style="padding:10px 0"><dt><?php echo $c['moldname']; ?>：</dt><dd><select name="tid" class="tid">
+    	<option value=''>所有栏目</option>
+        <?php foreach($typesdb as $v){ ?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!=$c['molds'])echo ' class="hidden"' ?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+        <?php } ?>
+    </select></dd><dd>指定ID范围：</dd><dd><input name="id1" type="text" class="int" style="width:30px;" /> - <input name="id2" type="text" class="int" style="width:30px;" /></dd>
+    <dd><input type="submit" value="更新html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd>
+    </dl>
+    </form>
+    <?php } ?>
+    
+    <form action="?c=a_html&a=clear&t=2" method="post">
+    <dl style="padding:10px 0"><dt>更新栏目：</dt><dd><select name="tid">
+    	<option value=''>所有栏目</option>
+        <?php foreach($typesdb as $v){ ?>
+        <option value="<?php echo $v['tid']; ?>"><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+        <?php } ?>
+    </select></dd><dd><input type="submit" value="更新栏目html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd></dl>
+    </form>
+    <?php if(funsinfo('member','isshow')==1){ ?>
+    <form action="?c=a_html&a=clear&t=3" method="post">
+    <dl style="padding:10px 0"><dt>指定专题：</dt><dd><select name="sid">
+    	<option value=''>所有专题</option>
+        <?php foreach($specials as $s){?>
+        <option value="<?php echo $s['sid']; ?>"><?php echo $s['name']; ?></option>
+        <?php } ?>
+    </select></dd><dd><input type="submit" value="更新专题html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd></dl>
+    </form>
+    <?php } ?>
+    
+    <form action="?c=a_html&a=clear&t=4" method="post">
+    <dl style="padding:10px 0"><dt>更新自定义页面：</dt><dd><input type="submit" value="更新自定义页面html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd></dl>
+    </form>
+    
+    <form action="?c=a_html&a=clear&t=99" method="post">
+    <dl style="padding:10px 0"><dt>更新首页：</dt><dd><input type="submit" value="更新首页html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd></dl>
+    </form>
+    
+    <form action="?c=a_html&a=clear&t=0" method="post">
+    <dl style="padding:10px 0"><dt>更新全部：</dt><dd><input type="submit" value="一键更新所有html" class="btnmini" style="height:26px;" onclick="click_go();" /></dd></dl>
+    </form>
+    
+    </div>
+</div>
+</body>
+</html>

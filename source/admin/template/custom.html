@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><a href="?c=a_labelcus&a=custom_index">编辑页面</a><a href="?c=a_labelcus&a=custom_add">添加页面</a><a href="?c=a_labelcus&a=custom_html">更新静态文件</a></div>
+<?php if($postgo){ ?>
+	<div class="info">
+    <form action="?c=a_labelcus&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="id" type="hidden" value="<?php echo $d['id'] ?>" />
+    <dl><dt>页面名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $d['name'] ?>" /></dd></dl>
+    <dl><dt>页面模板：</dt><dd><input name="template" type="text" class="int" value="<?php echo $d['template'] ?>" /></dd><dd class="t">输入模板文件名，如：about.html，模板文件请放于<?php echo '/template/'.syExt('view_themes').'/custom/'; ?>目录中</dd></dl>
+    <dl><dt>生成目录：</dt><dd><input name="dir" type="text" class="int" value="<?php echo $d['dir'] ?>" /></dd><dd class="t">输入完整的生成目录，如about，相对于根目录</dd></dl>
+    <dl><dt>生成文件名：</dt><dd><input name="file" type="text" class="int" value="<?php echo $d['file'] ?>" /></dd><dd class="t">格式如about.html</dd></dl>
+    <dl><dt>是否生产静态：</dt><dd><select name="html">
+      <option value="0" <?php if($d['html']==0){echo 'selected="selected"';} ?>>否</option>
+      <option value="1" <?php if($d['html']==1){echo 'selected="selected"';} ?>>是</option>
+    </select></dd><dd class="t">开启后将生成目录+文件名的静态文件，如sitemap.xml之类的静态文件</dd></dl>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+<?php }else{ ?>
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="40">ID</td>
+    <td>页面名称</td>
+    <td>访问地址</td>
+    <td width="120">操作</td>
+  </tr>
+<?php foreach($lists as $v){ ?>
+  <tr>
+    <td><?php echo $v['id']; ?></td>
+    <td class="tdleft"><a href="?c=a_labelcus&a=custom_edit&id=<?php echo $v['id']; ?>"><?php echo $v['name']; ?></a></td>
+    <td class="tdleft"><?php echo html_url('labelcus_custom',$v,$pages=0,$ispage); ?></td>
+    <td><a href="?c=a_labelcus&a=custom_edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<a href="?c=a_labelcus&a=custom_del&id=<?php echo $v['id']; ?>">删除</a></td>
+  </tr>
+<?php } ?>
+</table>
+<?php } ?>
+</div>
+</body>
+</html>

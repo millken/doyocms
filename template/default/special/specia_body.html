@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$special['title']}-{$GLOBALS['S']['title']}</title>
+<meta name="keywords" content="{$special['keywords']} " />
+<meta name="description" content="{$special['description']} " />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>专题</h2></div>
+      <div class="columncl">
+      {loop table="special" as="s"}
+      <a href="{$s['url']}"{if($special['sid']==$s['sid'])} class="c"{/if}>{$s['name']}</a>
+      {/loop}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：{$positions}</div>
+       <div class="c f2"><table width="100%"><tr><td>{$special['body']}</td></tr></table></div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

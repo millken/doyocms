@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}-{$GLOBALS['S']['title']}</title>
+<meta name="keywords" content="{$type['keywords']} " />
+<meta name="description" content="{$type['description']} " />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+<script src="{$GLOBALS['WWW']}include/js/dyfrom.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	aggregate();
+})
+function total(id){
+	price=parseFloat($("#price"+id).text())*parseInt($("input[name='goods["+id+"][quantity]']").val());
+	$("#total"+id).find('strong').text(price.toFixed(2));
+	aggregate();
+}
+function aggregate(){
+	var aggregate=0;
+	$(".total").each(function(){
+		aggregate+=parseFloat($(this).text());
+	});
+	$("#aggregate").text(aggregate.toFixed(2));
+}
+function cartdel(id){
+	if(confirm('确认删除购物车中的本商品吗？')==true) {
+		$.ajax({
+			type: "POST",
+			url: "index.php?c=pay&a=cartdel",
+			async: false,
+			cache: false,
+			data: "id="+id,
+			success: function(msg){
+				if(msg=='ok'){
+					$("#cart"+id).remove();
+					aggregate();
+				}else{
+					alert('操作失败，请稍后再试。');
+				}
+			}
+		});
+	}
+}
+function order_ret(){
+{if($virtual!=1)}
+	value=$("#logistics").val();
+	if(!dyfrom_null(value)){
+		alert('请选择物流！');return false;
+	}	
+	value=$("#name").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 20)){
+		alert('请输入真实姓名，并且不能大于20个字符');return false;
+	}
+	
+	value=$("#phone").val();
+	if(!dyfrom_mobile(value)){
+		alert('请输入正确的手机号码！');return false;
+	}
+	
+	value=$("#address1").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 20)){
+		alert('请输入所在省份，并且不能大于20个字符');return false;
+	}
+	
+	value=$("#address2").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 20)){
+		alert('请输入所在城市，并且不能大于20个字符');return false;
+	}
+	
+	value=$("#address").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 200)){
+		alert('请输入详细地址，并且不能大于200个字符');return false;
+	}
+	
+	value=$("#unote").val();
+	if(!dyfrom_max(value, 500)){
+		alert('留言内容不能超过500字！');return false;
+	}
+{/if}
+{if($GLOBALS['G_DY']['vercode']==1)}
+	value=$("#vercode").val();
+	if(dyfrom_ajax("index.php?c=ajax&a=vercode","vercode="+value)!='true'){
+		alert('验证码输入错误');return false;
+	}
+{/if}
+	$("#formorder").submit();
+}
+</script>
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>在线客服</h2></div>
+      <div class="columncl">
+            <a>Tel :0719-8689805</a>
+            <a>Email :hi@wdoyo.com</a>
+            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2373088201&site=qq&menu=yes">客服1：<img border="0" src="http://wpa.qq.com/pa?p=2:2373088201:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1522066607&site=qq&menu=yes">客服2：<img border="0" src="http://wpa.qq.com/pa?p=2:1522066607:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2514159326&site=qq&menu=yes">客服3：<img border="0" src="http://wpa.qq.com/pa?p=2:2514159326:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：{$positions}</div>
+       <div class="member_f">
+<form action="{$GLOBALS['WWW']}index.php?c=pay&a=order&id={$id}&cart={$cart}&virtual={$virtual}" method="post" id="formorder">
+       <dl><table class="ordertab" style="margin:10px 0;">
+		  <tr class="trbg">
+            <td>商品</td>
+            <td>单价</td>
+            <td>数量</td>
+            <td>小计</td>
+          </tr>
+          {foreach $goods as $gid=>$v}
+          <input name="goods[{$gid}][aid]" type="hidden" value="{$v['aid']}" />
+          <tr id="cart{$v['cartid']}">
+            <td class="left"><strong><a href="index.php?c=product&id={$v['aid']}" target="_blank">{$v['title']}</a></strong><br />{$v['attribute_txt']}
+            {foreach $v['attribute'] as $k=>$a}
+            <input name="goods[{$gid}][attribute][{$k}]" type="hidden" value="{$a}" />
+            {/foreach}
+            </td>
+            <td class="price">{if($v['discount'])}原价：{$v['discount'][0]}元<br />{$my['group']['name']}{$v['discount'][1]} 实付 {/if}<span id="price{$gid}" style="color: #C00">{$v['price']}</span> 元</td>
+            <td><input name="goods[{$gid}][quantity]" type="text" value="{$v['quantity']}" class="ins" style="width:40px;" onchange="total({$gid});" /></td>
+            <td class="total" id="total{$gid}"><strong>{$v['total']}</strong> 元
+            {if($cart)}<br /><span onclick="cartdel({$v['cartid']})" style="font-size:12px; cursor:pointer;">删除本商品</span>{/if}</td>
+          </tr>
+          {/foreach}
+         </table>
+         <table width="100%">
+          <tr>
+            <td style="padding:15px 0;">
+            {if($virtual!=1)}
+                请选择物流：<select name="logistics" id="logistics">
+                {foreach $GLOBALS['G_DY']['logistics'] as $k=>$l}
+                <option value="{$k}">{$k}</option>
+                {/foreach}
+                </select>
+            {/if}
+            </td>
+            <td align="right">合计：<span id="aggregate"></span> 元{if($virtual!=1)}(不含运费){/if}</td>
+          </tr>
+          </table>
+		</dl>
+       {if($virtual==1)}
+       <dl><dt>支付方式：</dt><dd>
+        {if($payment)}
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+         {foreach $payment as $v}
+          <tr>
+            <td width="30"><input name="payment" id="payment_{$v['pay']}" type="radio" value="{$v['pay']}" {if($v['n']==1)}checked="checked"{/if} /></td>
+            <td style="padding:5px; font-size:14px; font-weight:bold"><label for="payment_{$v['pay']}">{if($v['pay']=='offline'||$v['pay']=='cashbalance')}{$v['name']}{else}<img src="{$GLOBALS['WWW']}include/payment/{$v['pay']}.gif" style="cursor:pointer" />{/if}</label></td>
+          </tr>
+         {/foreach}
+        </table>
+        {else}
+        未设置支付平台，暂无法购买。
+        {/if}
+       </dd></dl>
+       {else}
+       <dl style="font-weight:bold; line-height:26px; background-color:#F6F6F6; color:#06C">&nbsp;&nbsp;以下为您的收货信息，请务必认真填写：</dl>
+       <dl><dt>真实姓名：</dt><dd><input type="text" name="info[name]" id="name" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>手机：</dt><dd><input type="text" name="info[phone]" id="phone" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>固定电话：</dt><dd><input type="text" name="info[tel]" id="tel" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>Email：</dt><dd><input type="text" name="info[email]" id="email" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>邮编：</dt><dd><input type="text" name="info[zipcode]" id="zipcode" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>所在省：</dt><dd><input type="text" name="info[address1]" id="address1" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>所在市：</dt><dd><input type="text" name="info[address2]" id="address2" class="inp" style="width:200px;"/></dd><dd class="m"></dd></dl>
+       <dl><dt>详细地址：</dt><dd><textarea name="info[address]" id="address" class="inp" style="width:300px; height:50px;"></textarea></dd><dd class="m"></dd></dl>
+       <dl><dt>留言：</dt><dd><textarea name="unote" id="unote" class="inp" style="width:300px; height:50px;"></textarea></dd><dd class="m"></dd></dl>       
+       {/if}
+{if($GLOBALS['G_DY']['vercode']==1)}
+       <dl><dt>验证码：</dt><dd><input type="text" name="vercode" id="vercode" class="inp" style="width:80px;"/></dd><dd><img src="{$GLOBALS['WWW']}include/vercode.php" id="vercodeimg" width="60" height="25" onclick="newvercode();" style="cursor:pointer;" /></dd><dd class="m"></dd></dl>
+<script type="text/javascript">
+setTimeout('newvercode()',1000);
+function newvercode(){
+	document.getElementById("vercodeimg").src="{$GLOBALS['WWW']}include/vercode.php?a="+Math.random();
+}
+</script>
+{/if}
+       <dl style="border:0;"><dt>&nbsp;</dt><dd><input type="button" value="提交订单" class="btnbig" onclick="order_ret()" /></dd></dl>
+</form>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

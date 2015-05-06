@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$type['title']}-{$GLOBALS['S']['title']}</title>
+<meta name="keywords" content="{$type['keywords']} " />
+<meta name="description" content="{$type['description']} " />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>{$type['classname']}</h2></div>
+      <div class="columncl">
+      {loop table="classtype" pid="$type["tid"]" mshow="1" not="1" as="t"}
+      <a href="{$t['url']}"{if($type['tid']==$t['tid'])} class="c"{/if}>{$t['classname']} </a>
+      {/loop}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：{$positions}</div>
+       <ul class="c list">
+       {foreach $lists as $v}
+       <li><span{if(newest($v['addtime'],24))} style="color:red"{/if}>[{fun date('Y-m-d',$v['addtime'])}]</span><a href="{$v['url']}" style="{$v['style']}" target="_blank">{$v['title']}</a></li>
+       {/foreach}
+       </ul>
+       <ul class="c pages">{$pages}</ul>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

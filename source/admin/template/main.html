@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<?php if($a==='headers'){ ?>
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/adminuser.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<?php } ?>
+<script type="text/javascript">
+function  heightSet(thisFrame){
+      if($.browser.mozilla || $.browser.msie){
+          bodyHeight =window.frames["a_update"].document.body.scrollHeight;
+      }else{
+          bodyHeight =thisFrame.contentWindow.document.documentElement.scrollHeight;
+      }
+       document.getElementById("a_update").height=bodyHeight;  
+
+}
+</script>
+</head>
+
+<body<?php if($a=='left'){echo ' class="leftbody" style="overflow-x:hidden;"';}?>>
+<?php if($a==='headers'){ ?>
+<div class="hd">
+    <div class="top"><span><a href="?c=a_sys&a=ecache" target="main">更新系统缓存</a> | <a href="index.php" target="_blank">前台首页</a><?php include_once('include/fun/verification.php');echo verification(2); ?></span>当前登录：<?php echo $_SESSION['auser']['auser']; ?>&nbsp;&nbsp;<a href="?c=a_adminuser&a=edituser" target="main">[修改资料]</a>&nbsp;&nbsp;<a href="?c=login&a=out" target="_parent">[退出登录]</a></div>
+    <div class="mu">
+      <div class="logo<?php echo verification(7); ?>"></div>
+      <div class="menu">
+      	<a href="#" onclick="JumpFrame('?a=left','?c=a_article');">内容管理</a>
+      	<?php if($c->checkgo('a_classtypes_','',1)){ ?><a href="#" onclick="JumpFrame('?a=left&l=classtypes','?c=a_classtypes');">栏目管理</a><?php } ?>
+        <?php if($c->checkgo('a_molds')){ ?><a href="#" onclick="JumpFrame('?a=left&l=molds','?c=a_molds');">频道管理</a><?php } ?>
+        <?php if($c->checkgo('a_funs')){ ?><a href="#" onclick="JumpFrame('?a=left&l=funs');">其他管理</a><?php } ?>
+        <a href="#" onclick="JumpFrame('?a=left&l=sys');">系统</a>
+      </div>
+    </div>
+</div>
+<?php } ?>
+
+<?php if($a==='left'){ ?>
+<div class="lefttop"><?php echo $lefttop ?></div>
+<div class="leftmenu"><?php echo $leftmenu ?></div>
+<?php } ?>
+
+<?php if($a=='main'){ ?>
+<div class="maintop">当前位置：管理首页</div>
+<div class="main">
+<table width="100%" class="tablist">
+  <tr class="trbg"><td colspan="2" class="tdleft" style="padding-left:10px;">欢迎登录<?php echo syExt('site_title');?>后台管理。</td></tr>
+  <tr><td width="80">当前登录：</td><td class="tdleft"><?php echo $_SESSION['auser']['auser']; ?>&nbsp;&nbsp;<a href="?c=a_adminuser&a=edituser" target="main">[修改资料]</a>&nbsp;&nbsp;<a href="?c=login&a=out" target="_parent">[退出登录]</a>。</td></tr>
+  <tr><td width="80">操作提示：</td><td class="tdleft">请在菜单选择需要操作的内容。</td></tr>
+  <?php include_once('include/fun/verification.php');echo verification(3); ?>
+</table><br />
+<?php if($c->checkgo('a_update')){ ?>
+<table width="100%" class="tablist">
+  <tr class="trbg"><td class="tdleft" style="padding-left:10px;">更新公告</td></tr>
+  <tr><td class="tdleft"><iframe src="?c=a_update&a=update_d" frameborder="0" scrolling="no" name="a_update" id="a_update" width="600" onload="heightSet(this)"></iframe></td></tr>
+</table>
+<?php } ?>
+</div>
+<?php } ?>
+
+<?php if($a==='bottom'){ ?>
+<div class="bottom">
+    <div class="a"></div>
+    <div class="b">
+    <?php echo syExt('site_title');?>
+    <?php include_once('include/fun/verification.php');echo verification(4); ?>
+    </div>
+</div>
+<?php } ?>
+
+</body>
+</html>

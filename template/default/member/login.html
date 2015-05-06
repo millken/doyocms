@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>会员登录-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+      <a href="?c=member&a=reg&url={$backurl}">会员注册</a>
+      <a href="?c=member&a=login&url={$backurl}" class="c">会员登录</a>
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：会员登录</div>
+       <div class="member_f">
+
+<form action="index.php?c=member&a=login&go=1&url={$backurl}" method="post">
+       <dl><dt>用户名：</dt><dd><input type="text" name="user" class="inp" style="width:150px;"/></dd></dl>
+       <dl><dt>密　码：</dt><dd><input type="password" name="pass" class="inp" style="width:150px;"/></dd><dd class="m"><a href="index.php?c=member&a=retrieve_password">忘记密码？</a></dd></dl>
+{if($GLOBALS['G_DY']['vercode']==1)}
+       <dl><dt>验证码：</dt><dd><input type="text" name="vercode" class="inp" style="width:80px;"/></dd><dd><img src="{$GLOBALS['WWW']}include/vercode.php" id="vercodeimg" width="60" height="25" style="cursor:pointer;" onclick="newvercode();" /></dd></dl>
+<script type="text/javascript">
+setTimeout('newvercode()',1000);
+function newvercode(){
+	document.getElementById("vercodeimg").src="{$GLOBALS['WWW']}include/vercode.php?a="+Math.random();
+}
+</script>
+{/if}
+       <dl style="border:0;"><dt>&nbsp;</dt><dd><input name="" type="submit" value="立即登录" class="btnbig" /></dd></dl>
+</form>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

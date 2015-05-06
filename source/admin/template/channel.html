@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("#tid option[class='hidden']").remove();
+	$("#ztid option[class='hidden']").remove();
+	$(".searchauto").change(function(){$("#search").submit();});
+});
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main" id="main">
+<table width="100%">
+  <tr>
+    <td>
+    <form action="" method="get" id="search">
+    <input name="c" type="hidden" value="a_channel" />
+    <input name="molds" type="hidden" value="<?php echo $molds ?>" />
+     <select name="isshow" class="searchauto">
+      <option value="">审核</option>
+      <option value="1" <?php if($isshow==1)echo 'selected="selected"';?>>已审</option>
+      <option value="2" <?php if($isshow==2)echo 'selected="selected"';?>>未审</option>
+    </select>
+    <select name="tid" class="searchauto" id="tid">
+      <option value="">所有栏目</option>
+       <?php foreach($typesdb as $v){ if($auser->checkclass($v['tid'])){?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!=$molds)echo ' class="hidden"'; ?> <?php if(syClass('syController')->syArgs('tid')==$v['tid']){echo 'selected="selected"';}?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+       <?php }} ?>
+    </select>
+    <?php if($auser->checkgo('a_special') && !empty($specials)){ ?>
+    <select name="sid" class="searchauto" id="sid">
+      <option value="">所有专题</option>
+       <?php foreach($specials as $v){?>
+        <option value="<?php echo $v['sid']; ?>" <?php if(syClass('syController')->syArgs('sid')==$v['sid']){echo 'selected="selected"';}?>><?php echo $v['name']; ?></option>
+       <?php } ?>
+    </select>
+    <?php } ?>
+    <select name="trait" class="searchauto">
+      <option value="">属性</option><?php foreach($traits as $v){ ?>
+      <option value="<?php echo $v['id']; ?>" <?php if(syClass('syController')->syArgs('trait')==$v['id']){echo 'selected="selected"';}?>><?php echo $v['name']; ?></option>
+    <?php } ?>
+    </select>
+    标题：<input name="title" type="text" style="width:100px;" value="<?php echo syClass('syController')->syArgs('title',1); ?>" />
+    <input name="search" type="submit" value="查找" class="btnmini" />
+    </form></td>
+  </tr><tr><td height="5"></td></tr>
+</table>
+<form id="formall" action="?c=a_channel&molds=<?php echo $molds ?>&a=alledit" method="post">
+<input name="go" id="go" type="hidden" value="" />
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="40">ID</td>
+    <td width="30">选择</td>
+    <td width="50">排序</td>
+    <td>标题</td>
+    <td width="80">状态</td>
+    <td width="120">发布时间</td>
+    <td width="60">点击</td>
+    <td width="120">操作</td>
+  </tr>
+<?php foreach($listarray as $v){ ?>
+  <tr>
+    <td><?php echo $v['id']; ?></td>
+    <td><input name="ids[]" type="checkbox" value="<?php echo $v['id']; ?>" /></td>
+     <td><input class="int" name="orders[<?php echo $v['id']; ?>]" type="text" value="<?php echo $v['orders']; ?>" style="width:30px; text-align:center;padding:2px;" /></td>
+    <td class="tdleft"><?php if($auser->checkgo('a_'.$molds,'edit')){?>
+    <a href="?c=a_channel&molds=<?php echo $molds ?>&a=edit&id=<?php echo $v['id']; ?>"><?php echo $v['title']; ?></a>
+    <?php }else{echo $v['title'];} ?><?php if($v['litpic'])echo ' <span style="color:#C00">图</span> '; ?><?php if($v['trait'])echo '<span style="color:#C00">'.traitinfo($v['trait']).'</span>'; ?></td>
+    <td><?php if($v['isshow']==1){echo '已审';}else{echo '<span style="color:#C00">未审</span>';} ?></td>
+    <td><?php echo date('Y-m-d H:i',$v['addtime']); ?></td>
+    <td><?php echo $v['hits']; ?></td>
+    <td><?php if($auser->checkgo('a_'.$molds,'edit')){?><a href="?c=a_channel&molds=<?php echo $molds ?>&a=edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<?php } ?><a href="index.php?c=channel&molds=<?php echo $molds ?>&id=<?php echo $v['id']; ?>" target="_blank">预览</a><?php if($auser->checkgo('a_'.$molds,'del')){?>&nbsp;&nbsp;<a href="?c=a_channel&molds=<?php echo $molds ?>&a=del&id=<?php echo $v['id']; ?>">删除</a><?php } ?></td>
+  </tr>
+<?php } ?>
+<tr><td colspan="8"><input id="allcheck" type="button" value="全选" class="btnmini" onclick="alls('ids[]','allcheck');" />&nbsp;
+    <?php if($auser->checkgo('a_'.$molds,'audit')){?>
+        <input name="g1" type="button" value="取消审核" class="btnmini" onclick="forma(1);" />
+        <input name="g1" type="button" value="审核" class="btnmini" onclick="forma(0);" />
+    <?php } ?>
+    <?php if($auser->checkgo('a_'.$molds,'del')){?>
+    &nbsp;<input name="g2" type="button" value="删除" class="btnmini" onclick="forma(2);" />
+    <?php } ?>
+    <?php if($auser->checkgo('a_'.$molds,'edit')){?>
+    &nbsp;<input name="g3" type="button" value="提交排序" class="btnmini" onclick="forma(9);" />
+    &nbsp;<select name="trait" id="ztrait" style="margin:0;">
+    <option value="">更改推荐属性为</option>
+      <?php foreach($traits as $t){ ?>
+      <option value="<?php echo $t['id']; ?>"><?php echo $t['name']; ?></option>
+      <?php } ?>
+      <option value="0">清空推荐属性</option>
+    </select>&nbsp;<input name="g3" type="button" value="更改" class="btnmini" onclick="forma(4);" />
+    &nbsp;<select name="tid" id="ztid" style="margin:0;">
+    <option value="">更改所属栏目为</option>
+      <?php foreach($typesdb as $v){ ?>
+      <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!=$molds)echo ' class="hidden"' ?> ><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+      <?php } ?>
+    </select>&nbsp;<input name="g3" type="button" value="更改" class="btnmini" onclick="forma(3);" />
+    <?php } ?></td></tr>
+</table>
+<table width="100%">
+<tr><td height="35"><ul class="pages"><?php echo $pages; ?></ul></td></tr>
+</table>
+</form>
+</div>
+</body>
+</html>

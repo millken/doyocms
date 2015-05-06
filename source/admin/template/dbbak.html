@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("#restore").click(function(){
+		if(confirm('恢复数据将覆盖现有数据！确定恢复数据吗？')){
+			$("#formrestore").submit();
+			click_go();
+		}
+	});
+});
+function cdoyo(){
+	if($(this).attr('value') == 1){
+		$(this).attr('value',2);
+		$("#doyo input").attr('checked',true);
+	}else{
+		$(this).attr('value',1);
+		$("#doyo input").attr('checked',false);
+	}
+}
+function cother(){
+	if($(this).attr('value') == 1){
+		$(this).attr('value',2);
+		$("#other input").attr('checked',true);
+	}else{
+		$(this).attr('value',1);
+		$("#other input").attr('checked',false);
+	}
+}
+function click_go(){
+	winboxgo('<img src="include/js/doyoupload/loading.gif" /> <strong>正在进行数据库操作，请稍后...</strong>','b');
+}
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main">
+<ul class="switchs"><li id="s1">备份数据</li><li id="s2" class="c">恢复数据</li><li id="s3" class="c">优化数据库</li></ul>
+	<div class="info">
+    <div id="infos1">
+    <form name="form1" method="post" action="?c=a_dbbak&a=bak">
+    <dl><dt>分卷大小：</dt><dd><input name="filesize" type="text" value="1024" size="10"> K</dd></dl>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="立即备份" class="btnbig" onclick="click_go();" /></dd></dl>
+    <dl><dt>选择数据表：</dt><dd>
+    <p id="doyo" style="float:left; height:100px; width:200px;">
+    	<input type="checkbox" value="1" checked="checked" onclick="cdoyo()"><strong>DOYO系统表</strong><br />
+        <?php foreach($dbdoyo as $v){ ?>
+        <input name="tables[]" type="checkbox" value="<?php echo $v; ?>" checked="checked" /><?php echo $v; ?><br />
+		<?php } ?>
+    </p>
+    <p id="other" style="float:left; height:100px; width:300px;">
+    	<input type="checkbox" value="2" onclick="cother()"><strong>其他表</strong><br />
+        <?php foreach($dbother as $v){ ?>
+        <input name="tables[]" type="checkbox" value="<?php echo $v; ?>" /><?php echo $v; ?><br />
+		<?php } ?>
+    </p>
+	</dd></dl>
+    </form>
+    </div>
+    <div id="infos2" class="none">
+    <form action="?c=a_dbbak&a=restore" method="post" id="formrestore">
+    <dl><dt>选择备份文件：</dt><dd><select name="serverfile"><option value="">请选择</option>
+        <?php
+        while(false!==($file=readdir($handle))) { 
+			if(preg_match("/^[0-9]{4,4}([0-9a-z-]+)(\.php)$/",$file)){echo "<option value='$file'>".str_replace('.php','',$file)."</option>";}
+        }
+		closedir($handle);
+		?>
+        </select></dd></dl>
+    <dl><dt>&nbsp;</dt><dd><input id="restore" type="button" class="btnbig" value="立即恢复" /></dd></dl>
+    </form>
+    </div>
+    <div id="infos3" class="none">
+    <form name="form1" method="post" action="?c=a_dbbak&a=optimize">
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="立即优化" class="btnbig" /></dd></dl>
+    <dl><dt>选择优化的表：</dt><dd>
+    <p id="doyo" style="float:left; height:100px; width:200px;">
+    	<input type="checkbox" value="1" checked="checked" onclick="cdoyo()"><strong>DOYO系统表</strong><br />
+        <?php foreach($dbdoyo as $v){ ?>
+        <input name="tables[]" type="checkbox" value="<?php echo $v; ?>" checked="checked" /><?php echo $v; ?><br />
+		<?php } ?>
+    </p>
+    <p id="other" style="float:left; height:100px; width:300px;">
+    	<input type="checkbox" value="2" onclick="cother()"><strong>其他表</strong><br />
+        <?php foreach($dbother as $v){ ?>
+        <input name="tables[]" type="checkbox" value="<?php echo $v; ?>" /><?php echo $v; ?><br />
+		<?php } ?>
+    </p>
+    </dd></dl>
+    </form>
+    </div>
+    </div>
+</div>
+</body>
+</html>

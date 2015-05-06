@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$GLOBALS['S']['title']}</title>
+<meta name="keywords" content="{$GLOBALS['S']['keywords']} " />
+<meta name="description" content="{$GLOBALS['S']['description']} " />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+<script type="text/javascript" src="{$GLOBALS['skin']}js/product.js"></script>
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm">
+  <div class="tab1 tab1b">
+	<div id="top_banner" >
+		 <ul class="slider" >
+         {loop table="ads" taid="1" limit="3"}
+			<li><img src="{$v['adfile']}"></li>
+			{/loop}
+		  </ul>
+		  <ul class="num" >
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+		  </ul>
+	</div>
+  </div>
+  <div class="bannerb"></div>
+</div>
+<div class="wpm">
+  <div class="tab495">
+  	<div class="type">
+    <p class="l"></p><p class="c f1">公司动态<span>Company News</span></p><p class="r"></p>{loop table="classtype" tid="8"}<a href="{$v['url']}"></a>{/loop}
+    </div>
+	<div class="tab4 news">
+	  <div class="l">
+        <div id="new_banner" >
+             <ul class="slider" >
+             	{loop table="article" tid="8" image="1" limit="3"} 
+                <li><img src="{$v['litpic']}"></li>
+                {/loop}
+              </ul>
+              <ul class="num" >
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+              </ul>
+        </div>
+      </div>
+      <ul class="r">
+{loop table="article" tid="8" limit="6"}
+		<li><a href="{$v['url']}" target="_blank" style="{$v['style']}">{fun newstr($v['title'],17)}</a></li>
+{/loop}
+      </ul>
+	</div>
+	<div class="tab42"></div>
+  </div>
+  <div class="tab475">
+  {loop table="classtype" tid="1"}
+  	<div class="type">
+    <p class="l"></p><p class="c f1">关于我们<span>About Us</span></p><p class="r"></p><a href="{$v['url']}"></a>
+    </div>
+	<div class="tab5 about">
+        <div class="l"><img src="{$v['litpic']}" width="180" height="150" /></div>
+        <div class="r">{fun newstr($v['description'],270)}<a href="{$v['url']}">[详细]</a></div>
+    </div>
+	<div class="tab52"></div>
+  {/loop}
+  </div>
+
+  <div class="tab980">
+  	<div class="type">
+    <p class="l"></p><p class="c f1">商品中心<span>Product Center</span></p><p class="r"></p>{loop table="classtype" tid="2"}<a href="{$v['url']}"></a>{/loop}
+    </div>
+	<div class="tab1 tab1b">
+        <div class="product">
+            <div class="wrapper">
+              <ul>
+				{loop table="product" tid="2" limit="10"}
+				<li><a href="{$v['url']}" target="_blank" style="{$v['style']}"><img src="{$v['litpic']}" /><p>{fun newstr($v['title'],35)}</p></a></li>
+				{/loop}
+              </ul>        
+            </div>
+        </div>
+    </div>
+	<div class="tab12"></div>
+  </div>
+  
+  <div class="tab220">
+  	<div class="type">
+    <p class="l"></p><p class="c f1">联系我们<span>Contact Us</span></p><p class="r"></p>{loop table="classtype" tid="7"}<a href="{$v['url']}"></a>{/loop}
+    </div>
+	<div class="tab3 contact">
+		<div class="t"><img src="{$GLOBALS['skin']}images/cu.jpg" width="200" height="70" /></div>
+        <ul class="b">
+            <li><span>Tel :</span><p>0719-8689805</p></li>
+            <li><span>Email :</span><p>hi@wdoyo.com</p></li>
+            <li><span>QQ :</span><p>2514159326</p></li>
+        </ul>
+    </div>
+	<div class="tab32"></div>
+  </div>
+  <div class="tab750">
+  	<div class="type">
+    <p class="l"></p><p class="c f1">服务案例<span>Service Case</span></p><p class="r"></p>{loop table="classtype" tid="4"}<a href="{$v['url']}"></a>{/loop}
+    </div>
+	<div class="tab2">
+        <ul class="case">
+			{loop table="article" tid="4" limit="4"}
+			<li><a href="{$v['url']}" target="_blank" style="{$v['style']}"><img src="{$v['litpic']}" /><p>{fun newstr($v['title'],35)}</p></a></li>
+			{/loop}
+        </ul> 
+    </div>
+	<div class="tab22"></div>
+  </div>
+
+</div>
+<div class="wp">
+  <div class="links">友情链接：
+{loop table="links"}
+<a href="{$v['gourl']}" target="_blank">{$v['name']}</a>
+{/loop}
+  </div>
+</div>
+{include="bottom.html"}
+
+</body>
+</html>

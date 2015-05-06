@@ -1,0 +1,8 @@
+{if($cart)}
+{foreach $cart as $c}
+<dl id="cart{$c['cartid']}"><dt><a href="{$GLOBALS['WWW']}index.php?c=product&id={$c['aid']}" style="color:#139DDF;"><img src="{$c['img']}" /></a></dt><dd><strong><a href="{$GLOBALS['WWW']}index.php?c=product&id={$c['aid']}" style="color:#139DDF;">{$c['title']}</a></strong><br />{$c['attribute_txt']}</dd><dd class="p"><strong>{$c['price']}</strong> 元<br /><a href="#" onclick="mycartdel({$c['cartid']})">[删除]</a></dd></dl>
+{/foreach}
+<dl class="j"><a href="{$GLOBALS['WWW']}index.php?c=pay&cart=1" style="color:#139DDF;">[结算购物车中的商品]</a></dl>
+{else}
+<dl class="j">购物车中暂无商品</dl>
+{/if}

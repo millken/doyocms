@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$type['classname']}-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+		{include="member/menu.html"}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position"><span><a href="?c=member&a=release&tid={$type['tid']}">发布内容</a></span>当前位置：{$type['classname']}  &gt;  我发布的内容</div>
+       <ul class="c list">
+       {foreach $lists as $v}
+       <li><span>[{fun date('Y-m-d',$v['addtime'])}]&nbsp;&nbsp;<a href="?c=member&a=release&tid={$v['tid']}&id={$v['id']}">[编辑]</a>{if($v['isshow']==0)}<a href="?c=member&a=mydel&molds={$type['molds']}&id={$v['id']}">&nbsp;&nbsp;[删除]</a>{/if}</span><a href="?c=member&a=release&tid={$v['tid']}&id={$v['id']}">{$v['title']}</a><em>{if($v['isshow']==0)}待审核{else}<a href="?c={$type['molds']}&id={$v['id']}" target="_blank" style="color:#999">[预览]</a>{/if}</em></li>
+       {/foreach}
+       </ul>
+       <ul class="c pages">{$pages}</ul>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

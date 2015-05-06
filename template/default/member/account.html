@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>财务记录-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+		{include="member/menu.html"}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">财务记录</div>
+    </div>
+       <div class="comment">
+         <div class="c" style="padding:10px 0; font-size:14px;">当前账户余额为 <strong style="font-size:14px; color:#C00">{$mymoney}</strong> 元</div>
+         <div class="list">
+         {foreach $lists as $s}
+         <dl><dt style="font-size:14px;"><span style="float:right">{fun date('Y-m-d H:i:s',$s['addtime'])}</span>金额：<strong>{$s['pn']}{$s['money']}</strong></dt>
+         <dd>{$s['info']}</dd></dl>
+         {/foreach}
+         </div>
+         <div class="c pages">{$pages}</div>
+       </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><ul class="switchs">
+<a href="?c=a_template"<?php if($type){echo ' class="c"';}?>>本地模板</a>
+<!--<a href="?c=a_template&type=1"<?php if($type!=1){echo ' class="c"';}?>></a> -->
+<a href="?c=a_template&type=2"<?php if($type!=2){echo ' class="c"';}?>>模板使用说明</a></ul>
+<?php if(!$type){?>
+	<div class="info">
+    <ul class="template">
+    <?php foreach($lists as $v){ ?>
+    <li><img src="<?php if($v['thumb']){echo 'template/'.$v['dir'].'/thumb.jpg';}else{echo 'source/admin/template/images/noimg.gif';} ?>" /><p><strong><?php if($themes==$v['dir']){ echo '[默认] '; } ?><?php echo $v['dir'] ?></strong></p>
+    <p><?php if($themes!=$v['dir']){ ?><a href="?c=a_template&a=add&template=<?php echo $v['dir'] ?>">设为默认</a><?php } if($themes==$v['dir']){ ?><a href="?c=a_template&a=export&template=<?php echo $v['dir'] ?>" class="c">备份数据</a><?php } ?></p></li>
+    <?php } ?>
+    </ul>
+    </div>
+<?php }
+if($type==1){?>
+    <div class="info">
+    正在建设中...
+    </div>
+<?php }
+if($type==2){?>
+	<div class="info" style="border:0; line-height:220%; padding-left:10px;">
+    所有模板风格包均放置于系统template目录下，每个目录对应一个模板风格包，完整的模板包含模板文件、数据备份文件，数据备份是为了方便安装模板后能完整展示模板细节。<br /><br />
+    【<strong>模板安装设置</strong>】<br />
+    <strong>模板的安装</strong>：下载模板包后，将模板包拷贝至系统template目录下,后台刷新模板管理，即可看到新加的模板选项<br />
+    <strong>设为默认</strong>：点击“设为默认”，将置换此模板为默认模板，如果存在数据备份文件，则会将此模板目录中的数据备份导入现在的数据库中，请注意此处会替换系统数据库，操作前务必先进行系统数据库完整备份操作。<br />
+	<strong>备份数据</strong>：点击“备份数据”，将把当前系统数据生成备份文件,此操作不会导出涉及系统隐私数据，请注意此处备份并非完整系统数据备份，不能替代系统数据备份功能。<br />
+    <strong>删除模板</strong>：将系统template目录下的对应模板文件夹完整删除即可。<br />
+    <br />
+    【<strong>模板的发布与分享</strong>】<br />
+    <strong>模板包命名</strong>：模板包只能由英文、数字、下划线组合，如果需要发布模板包，请尽量将模板包复杂命名，避免与其他用户的模板包文件夹冲突。<br />
+    <strong>模板包目录</strong>：模板文件放于根目录template，其中每个文件夹为一套模板，为保证模板安全，模板图片、样式表、js等需要在模板中显示路径的文件均放在根目录skin下，同样每套皮肤一个独立目录(目录名必须与风格目录相同)，html模板文件中可使用{$GLOBALS['skin']}标签代表系统当前模板皮肤目录<br />
+    <strong>模板数据</strong>：先执行模板备份操作，模板目录将生产数据备份文件sql.txt，之后模板风格目录即可作为一个完整模板包进行发布和分享。注意请在模板包根目录加入模板缩略图文件thumb.jpg
+    </div>
+<?php }?>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><a href="?c=a_fields&molds=<?php echo $molds; ?>&tid=<?php echo $tid;?>">字段管理</a><a href="?c=a_fields&a=add&molds=<?php echo $molds;?>&tid=<?php echo $tid;?>">添加字段</a></div>
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="60">排序</td>
+    <td><span style="color:#C00"><?php echo $channelname; ?></span> 字段名称</td>
+    <td width="150">字段标识</td>
+    <td width="90"><?php if($molds=='member'){?>注册必填<?php }else{?>列表调用<?php }?></td>
+    <td width="150">类型</td>
+    <td width="90">长度限制</td>
+    <td width="90">字段状态</td>
+    <td width="150">操作</td>
+  </tr>
+<?php foreach($lists as $v){?>
+  <tr <?php if($v['fieldshow']==0)echo ' style="color:#999"'; ?>>
+    <td><?php echo $v['fieldorder'] ?></td>
+    <td class="tdleft"><a href="?c=a_fields&a=edit&molds=<?php echo $molds ?>&fid=<?php echo $v['fid']; ?>"><?php echo $v['fieldsname']; ?></a></td>
+    <td><?php echo $v['fields'];?></td>
+    <td><?php if($v['lists']==1){echo '<span style="color:#C00">是</span>';}else{echo '否';} ?></td>
+    <td class="tdleft"><?php 
+    switch ($v['fieldstype']) {
+					case 'varchar':
+						echo '中小型文本'; 
+						break;
+					case 'text':
+						echo '大型文本(编辑器)'; 
+						break;
+					case 'int':
+						echo '整数'; 
+						break;
+					case 'decimal':
+						echo '货币'; 
+						break;
+					case 'time':
+						echo '时间'; 
+						break;
+					case 'files':
+						echo '单个附件'; 
+						break;
+					case 'fileall':
+						echo '多个附件'; 
+						break;
+					case 'select':
+						echo '单选菜单'; 
+						break;
+					case 'checkbox':
+						echo '多选菜单'; 
+						break;
+                    case 'contingency':
+						echo '内容关联'; 
+						break;
+				}
+    ?></td>
+    <td><?php if($v['fieldslong']!=0){echo $v['fieldslong'];} ?></td>
+    <td><?php if($v['fieldshow']==1){echo '启用';}else{echo '<span style="color:#C00">禁用</span>';} ?></td>
+    <td><a href="?c=a_fields&a=edit&molds=<?php echo $molds ?>&fid=<?php echo $v['fid']; ?>">编辑</a>&nbsp;&nbsp;<a href="?c=a_fields&a=del&molds=<?php echo $molds ?>&fid=<?php echo $v['fid']; ?>">删除</a></td>
+  </tr>
+<?php } ?>
+</table>
+<ul class="pages"><?php echo $pages; ?></ul>
+</div>
+</body>
+</html>

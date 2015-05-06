@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("#submit").click(function(check){ 
+		$("#submit").css("display","none");
+		winboxgo('<img src="include/js/doyoupload/loading.gif" /> <strong>正在检查升级...</strong>','b');
+	});
+	$("#newupdate").click(function(check){ 
+		$("#newupdate").css("display","none");
+		winboxgo('<img src="include/js/doyoupload/loading.gif" /> <strong><br />正在进行升级...<br />完成前请勿关闭本页面！<br /><br /></strong>','b');
+	});
+});
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：在线升级</div>
+<div class="main">
+	<div class="info">
+<?php if($postgo=='index'){ ?>
+    <form action="?c=a_update&a=clear" method="post">
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="开始检测升级" class="btnbig" id="submit" /></dd></dl>
+    <dl style="padding-top:10px; line-height:25px; color:#C00"><dt>&nbsp;</dt><dd>本功能只执行补丁升级，不包括功能版本升级。<br />如修改过配置文件的版本信息，将导致无法升级</dd></dl>
+    </form>
+	<?php if($update_log){?>
+	<dl><dt>升级记录:</dt><dd>
+    <?php foreach($update_log as $l){?>
+    版本：<?php echo $l['version'].' '.$l['newupdate'];?> 升级于<?php echo date('Y-m-d H:i',$l['uptime']); ?><br /><?php }?>
+	</dd></dl>
+	<?php }?>
+<?php } ?>
+<?php if($postgo=='clear'){ ?>
+	<form action="?c=a_update&a=newupdate" method="post">
+    <input name="d" type="hidden" value="<?php echo $update;?>" />
+    <input name="f" type="hidden" value="<?php echo $upnew;?>" />
+    <input name="s" type="hidden" value="<?php echo $upsql;?>" />
+	<dl><dt>当前系统版本：</dt><dd><?php echo syExt('version').' '.syExt('update');?></dd></dl>
+	<dl><dt>本次升级版本：</dt><dd><?php echo syExt('version').' '.$update;?></dd></dl>
+    <dl><dt>本次升级文件：</dt><dd>
+<?php foreach(explode('|-update-|',$upnew) as $s){?>
+	<?php echo $s;?><br />
+<?php }?></dd></dl>
+	<?php if($upsql!=''){?>
+    <dl><dt>数据库升级：</dt><dd><?php echo count(explode('|-update-|',$upsql));?>条</dd></dl>
+    <?php }?>
+	<dl><dt>&nbsp;</dt><dd><input type="submit" value="立即升级" class="btnbig" id="newupdate" /></dd></dl>
+    <dl style="border:0; padding-top:20px; line-height:25px; color:#C00">本功能只执行补丁升级，不包括功能版本升级。<br />如果自行修改过程序代码，请在更新前备份文件。</dl>
+    </form>
+<?php } ?>
+    </div>
+</div>
+</body>
+</html>

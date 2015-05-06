@@ -1,0 +1,35 @@
+@charset "utf-8";
+* {word-wrap: break-word;}
+body {background-color:#EDF3F8;font-size:12px;font-family: "宋体",Arial; color:#555;}
+body, ul, ol, li, dl, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset, hr {margin: 0; padding: 0; border:0;}
+.leftbody {background-image:url(leftbg.gif);background-color:#F6F6F6;}
+table {empty-cells: show; border-collapse: collapse;}
+ul li {list-style: none;}
+img {border: none;}
+a {color: #476DD1; text-decoration: none;}
+a:hover {text-decoration: underline;}
+.wp,.bottom,.top {margin: 0 auto; width: 800px;padding:20px; background-color:#FFF}
+.int{border:1px solid #CCC; padding:3px; border-top-color:#666;border-left-color:#666;background-color:#F6F6F6; line-height:14px; width:150px;}
+.int:hover{border:1px solid #5EA2D9;background-color:#EDF3F8;}
+.btnbig{border:1px solid #999; overflow:hidden; border-top:#E0E0E0;border-left:#E0E0E0;background-color:#E0E0E0;font-weight:bold;color:#555;}
+.btnbig{padding:5px 10px;font-size:14px; height:30px;margin-top:5px}
+
+.top{padding: 0; width: 840px;background-image:url(topbg.gif); height:50px;border-bottom:5px solid #9CC0E9}
+.top span{ float:right; line-height:50px; font-size:14px; color:#FFF; font-weight:bold; padding-right:30px;}
+
+.main{ width:800px;background-color:#FFF;}
+
+.switchs{background-color:#F6F6F6; border-top:1px solid #E8E8E8;font-weight:bold; line-height:30px;width:800px;}
+
+.main .info{width:800px;}
+.main .info dl{width:800px;border-top:1px solid #E8E8E8; padding:5px 0; float:left; background-color:#FFF}
+.main .info dl dt{float:left; width:150px; text-align:right; line-height:26px;}
+.main .info dl dd{float:left; line-height:26px; padding-left:10px;}
+.main .info dl dd span{padding:0 10px;color:#5588D8;}
+.main .info dl dd em{padding:0 10px; font-style:normal;color: #C00;}
+.main .info dl dd.t{color:#888;padding-left:17px;background:url(pic.gif) -138px 8px no-repeat; margin-left:10px;}
+
+.oka{font-size:14px; font-weight:bold;color:#C00;line-height:50px;}
+.oka a{ margin-left:15px;}
+
+.bottom{padding:10px 20px;background-color:#F6F6F6;background-image:url(lin.gif); text-align:center; font-family:Verdana, Geneva, sans-serif; font-size:11px; border-bottom:2px solid #5588D8}

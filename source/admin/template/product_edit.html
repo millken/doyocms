@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script charset="utf-8" src="include/js/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="include/js/kindeditor/lang/zh_CN.js"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('#body1', {
+		filePostName : 'editor_KindEditor',filterMode : false,
+		uploadJson : '<?php echo $GLOBALS["G_DY"]["url"]["url_path_base"];?>?c=uploads&tid='+$("#tid").attr("value")+'&isfiles=editor_KindEditor'
+	});
+});
+$(function(){
+	$("#tid option[class='hidden']").remove();
+	fieldsinfo();
+	$("#tid").change(function(){
+		fieldsinfo();
+	});
+	$("#submit").click(function(check){ 
+		if($("#tid").val() == ''||$("#title").val() == ''){ 
+			alert("请选择栏目和输入标题");  
+			check.preventDefault();
+		}else{
+			<?php if(syExt('site_html')==1){ ?>
+			winboxgo('<img src="include/js/doyoupload/loading.gif" /> <strong>正在提交，并生成静态文件，请稍后...</strong>','b');
+			<?php }else{ ?>
+			if($("#all_down_images").attr('checked') == true){
+				winboxgo('<img src="include/js/doyoupload/loading.gif" /> <strong>正在下载远程图片，请稍后...</strong>','b');
+			}
+			<?php } ?>
+			$("#submit").css("display","none");
+		}
+	}); 
+});
+function fieldsinfo(){
+	$("#fieldsinfo").empty();
+	$("#fieldsinfo").append("<dl><dt>&nbsp;</dt><dd><img src='include/js/doyoupload/loading.gif' /></dd>");
+	$.ajax({
+		url: '?c=a_fields&a=info',type: 'post',
+		//async:false,
+		cache: false,
+		data: "tid="+$("#tid").attr("value")+"&molds=<?php echo $molds;?>&id=<?php echo $carray['id'];?>",
+		success: function(html){
+			$("#fieldsinfo").empty();
+			$("#fieldsinfo").append(html);
+		}
+	});
+	$("#flitpic").attr("src","?c=uploads&a=loadup&inputid=litpic&fileExt=*.jpg;*.jpeg;*.gif;*.png&fileover=1&tid="+$("#tid").attr("value"));
+	attribute_add();
+}
+function delfieldall(fieldid){
+	$("#"+fieldid).remove();
+}
+function attribute_add(){
+	$("#attribute").empty();
+	$("#attribute").append("<dl><dt>&nbsp;</dt><dd><img src='include/js/doyoupload/loading.gif' /></dd>");
+	$.ajax({
+		url: "?c=a_goods&a=attribute_ajax",type: 'post',
+		//async:false,
+		cache: false,
+		data: "tid="+$("#tid").attr("value")+"&molds=<?php echo $molds;?>&id=<?php echo $carray['id'];?>",
+		success: function(html){
+			$("#attribute").empty();
+			if(html!=''){
+				$("#attribute").append(html);
+				$("#attribute_help").removeClass("none");
+			}else{$("#attribute_help").addClass("none");}
+		}
+	});
+}
+function dl_logistics(is){
+	if(is==0){
+		$("#dl_virtual").addClass("none");
+		$("#dl_logistics").removeClass("none");
+	}else{
+		$("#dl_virtual").removeClass("none");
+		$("#dl_logistics").addClass("none");
+	}
+}
+</script>
+</head>
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main">
+<ul class="switchs"><li id="s1">基本内容</li><?php if(funsinfo('pay','isshow')==1&&funsinfo('goods','isshow')==1){ ?><li id="s2" class="c">规格属性</li><li id="s3" class="c">会员优惠</li><?php }?><li id="s4" class="c">高级设置</li></ul>
+	<div class="info">
+    <form action="?c=a_<?php echo $molds ?>&a=<?php echo $postgo ?>&run=1" method="post" id="gform">
+    <input name="id" type="hidden" value="<?php echo $carray['id'] ?>" />
+    <div id="infos1">
+    <dl style="border:0;"><dt>所属栏目：</dt><dd><select name="tid" id="tid">
+    	<option value=''>选择所属栏目</option>
+        <?php foreach($typesdb as $v){ if($auser->checkclass($v['tid'])){?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($carray['tid']==$v['tid'] || $itid==$v['tid']){echo 'selected="selected"';}?><?php if($v['molds']!=$molds)echo ' class="hidden"' ?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+        <?php }} ?>
+    </select>
+    </dd></dl>
+    <dl><dt>名称：</dt><dd><input name="title" id="title" type="text" class="int" value="<?php echo $carray['title'] ?>" style="width:300px;" /></dd></dl>
+    <dl><dt>价格：</dt><dd><input name="price" type="text" class="int" style="width:60px;" value="<?php echo $carray['price']?>" /> 元</dd></dl>
+    <dl id="litpicover" class="fileover" style="<?php if($carray['litpic']!='')echo 'display:block;';?>"><dt>&nbsp;</dt><?php if($carray['litpic']!=''){echo '<dd><img src="'.$carray['litpic'].'" height="50" /></dd>';} ?></dl>
+    <dl><dt>缩略图：</dt><dd><input name="litpic" id="litpic" type="text" class="int" value="<?php echo $carray['litpic'] ?>" /></dd><dd><iframe frameborder="0" width="300" height="26" scrolling="No" id="flitpic" name="flitpic" src="?c=uploads&a=loadup&inputid=litpic&fileExt=*.jpg;*.jpeg;*.gif;*.png&fileover=1"></iframe></dd></dl>
+	<dl id="photoover" class="fileover fall" style="<?php if($carray['photo']!='')echo 'display:block;'; ?>">
+    <?php if($carray['photo']!=''){
+      $photo_i=1;
+      foreach(explode('|-|',$carray['photo']) as $v){
+          $s=explode('|,|',$v);
+          $fname=explode('.',$s[0]);$fnames=preg_replace('/.*\/.*\//si', '',$fname[0]);
+          echo '<dd id="f_'.$fnames.'"><img src="'.$s[0].'" height="50" width="60" />';
+          echo '<input name="photofile[]" type="hidden" value="'.$s[0].'" /><br /><input name="phototxt[]" type="text" value="'.$s[1].'" class="int" style="width:52px;height:12px;" /><br />排序 <input name="photonum[]" type="text" value="'.$photo_i.'" class="int" style="width:22px;height:12px;" /><br /><a onclick=delfieldall("f_'.$fnames.'") style="width:43;padding-left:17px;cursor:pointer;">删除</a></dd>';
+          $photo_i++;
+      }
+    } ?>
+    </dl>
+    <?php $img=unserialize($moldsdb['config']) ?>
+	<dl><dt>图集：</dt><dd><iframe frameborder="0" width="300" height="26" scrolling="No" id="flitpic" name="flitpic" src="?c=uploads&a=loadup&inputid=photo&multi=1&fileExt=*.jpg;*.jpeg;*.gif;*.png&fileover=1&imgw=<?php echo $img['photo_w'][1] ?>&imgh=<?php echo $img['photo_h'][1] ?>"></iframe></dd></dl>
+    <span id="fieldsinfo"></span>
+    <dl><dt>介绍：</dt><dd><input name="all_down_images" id="all_down_images" type="checkbox" value="1" />下载远程图片&nbsp;&nbsp;&nbsp;<a href="javascript:;" onclick="editor.insertHtml('[doyo|page]');">插入分页符</a><span style="color:#999">(将鼠标点击在需要分页的地方，然后点此处插入分页)</span><br /><textarea name="body" id="body1" style="width:670px;height:400px;"><?php echo $carray['body'] ?></textarea></dd></dl>
+    <dl><dt>简介：</dt><dd><textarea name="description" style="width:300px; height:50px;" class="int"><?php echo $carray['description'] ?></textarea></dd></dl>
+    <?php if(!empty($traits)){ ?>
+    <dl><dt>推荐属性：</dt><dd>
+    <?php foreach($traits as $v){ ?>
+    	<label><input name="trait[]" type="checkbox" value="<?php echo $v['id'] ?>" <?php if(strpos($carray['trait'],','.$v['id'].',')!==FALSE)echo 'checked="checked" '; ?>/><?php echo $v['name'] ?> </label>
+    <?php } ?></dd><?php if($auser->checkgo('a_traits')){ ?><dd class="m"><a href="?c=a_traits&molds=product" target="_blank">[管理]</a></dd><?php } ?></dl>
+    <?php } ?>
+    <?php if($auser->checkgo('a_'.$molds,'audit')){ ?>
+    <dl><dt>审核：</dt><dd><label><input name="isshow" type="radio" value="1"<?php if($carray['isshow']==1 || $carray=='')echo ' checked="checked"' ?> />已审</label> <label><input type="radio" name="isshow" value="0"<?php if($carray['isshow']==0 && $carray!='')echo ' checked="checked"' ?> />未审</label> </dd></dl>
+    <?php }else{ ?><input name="isshow" type="hidden" value="<?php echo $auser->audit() ?>" /><?php } ?>
+    </div>
+    
+    <?php if(funsinfo('pay','isshow')==1&&funsinfo('goods','isshow')==1){ ?>
+    <div id="infos2" class="none">
+    <dl style="border:0;"><dt>商品类型：</dt><dd><label><input onclick="dl_logistics(0);" type="radio" name="virtual" value="0"<?php if($carray['virtual']==0 || $carray=='')echo ' checked="checked"' ?> /><strong>实物商品</strong></label> 
+    <label><input onclick="dl_logistics(1);" name="virtual" type="radio" value="1"<?php if($carray['virtual']==1)echo ' checked="checked"' ?> /><strong>虚拟商品</strong>(自动发货)</label></dd></dl>
+    <dl id="dl_virtual"<?php if($carray['virtual']==0)echo ' class="none"' ?>><dd class="t">虚拟商品成交后，系统将自动发送虚拟货物给用户。即如：点卡卡密、会员卡等。请在商品添加完成后，在商品管理中添加虚拟货物。</dd></dl>
+    <dl id="dl_logistics"<?php if($carray['virtual']==1)echo ' class="none"' ?>><dt>物流费用：</dt><dd><table>
+    <?php 
+    $logistics=unserialize($carray['logistics']);
+    foreach($GLOBALS['G_DY']['logistics'] as $k=>$l){ ?>
+          <tr>
+            <td align="right"><?php echo $k ?> </td>
+            <td><input name="logistics[<?php echo $k; ?>]" type="text" class="int" style="width:50px;" value="<?php if($postgo=='add'){echo $l;}else{if($logistics[$k]){echo $logistics[$k];}else{echo '0';}} ?>" /> 元</td>
+          </tr>
+    <?php } ?></table></dd><dd class="t">输入0表示免运费。</dd></dl>
+    
+    <span id="attribute"></span>
+    <dl id="attribute_help" class="none"><dd class="t">规格选项示例：如商品价格为100元，选项“颜色-黑色”的价格增减为“-10”元，即最终本商品“颜色-黑色”的价格为100-10=90元。<br />
+价格增减中直接输入数字如10代表需增加，输入负数如-10代表需减去，输入0代表价格无变化。勾选后启用。</dd></dl>
+    </div>
+    
+    <div id="infos3" class="none">
+    <dl style="border:0;"><dd class="t">优惠有两种方法，折扣和直减。<br />选择“折扣”请填写折扣率，如9.1折即填写“9.1”。选择“直减”请填写减少金额，如直接减少1.21元即填写“1.21”</dd></dl>
+<?php 
+$discount=syDB('product_discount')->findAll(array('aid'=>$carray['id']));
+if($postgo=='add'||!$discount){
+    $member_group=syDB('member_group')->findAll('gid>1',' weight ','weight,gid,name,discount_type,discount');
+    foreach($member_group as $m){ ?>
+     <dl><dt><?php echo $m['name'] ?>：</dt><dd><select name="discount_type[<?php echo $m['gid'] ?>]">
+      <option value="0"<?php if($m['discount_type']==0)echo ' selected="selected"'; ?>>无优惠</option>
+      <option value="1"<?php if($m['discount_type']==1)echo ' selected="selected"'; ?>>折扣</option>
+      <option value="2"<?php if($m['discount_type']==2)echo ' selected="selected"'; ?>>直减</option>
+    </select></dd><dd><input name="discount[<?php echo $m['gid'] ?>]" type="text" class="int" value="<?php echo $m['discount'] ?>" style="width:60px;"/></dd></dl>
+<?php }
+}else{
+    foreach($discount as $di){ ?>
+     <dl><dt><?php echo membergroup($di['mgid'],'name') ?>：</dt><dd><select name="discount_type[<?php echo $di['mgid'] ?>]">
+      <option value="0"<?php if($di['type']==0)echo ' selected="selected"'; ?>>无优惠</option>
+      <option value="1"<?php if($di['type']==1)echo ' selected="selected"'; ?>>折扣</option>
+      <option value="2"<?php if($di['type']==2)echo ' selected="selected"'; ?>>直减</option>
+    </select></dd><dd><input name="discount[<?php echo $di['mgid'] ?>]" type="text" class="int" value="<?php echo $di['discount'] ?>" style="width:60px;"/></dd></dl>
+<?php }
+} ?>
+    </div>
+    <?php } ?>
+    
+    <div id="infos4" class="none">
+    <dl style="border:0;"><dt>标题颜色：</dt><dd><select name="style1" onchange="select">
+        	<option value="" >默认</option>
+    	  	<option value="color:#CC0000;" style="color:#CC0000;" <?php if(strpos($carray['style'],'CC0000')!==FALSE)echo 'selected="selected"' ?>>红色</option>
+            <option value="color:#0000FF;" style="color:#0000FF;" <?php if(strpos($carray['style'],'0000FF')!==FALSE)echo 'selected="selected"' ?>>蓝色</option>
+            <option value="color:#009900;" style="color:#009900;" <?php if(strpos($carray['style'],'009900')!==FALSE)echo 'selected="selected"' ?>>绿色</option>
+            <option value="color:#996600;" style="color:#996600;" <?php if(strpos($carray['style'],'996600')!==FALSE)echo 'selected="selected"' ?>>咖啡色</option>
+            <option value="color:#8142BF;" style="color:#8142BF;" <?php if(strpos($carray['style'],'8142BF')!==FALSE)echo 'selected="selected"' ?>>紫色</option>
+            <option value="color:#FF6600;" style="color:#FF6600;" <?php if(strpos($carray['style'],'FF6600')!==FALSE)echo 'selected="selected"' ?>>橘黄色</option>
+        	</select></dd>
+        <dd><strong>标题样式：</strong></dd><dd><select name="style2" onchange="select">
+        	<option value="" >默认</option>
+    	  	<option value="font-weight:bold;" <?php if(strpos($carray['style'],'bold')!==FALSE)echo 'selected="selected"' ?>>加粗</option>
+            <option value="text-decoration:underline;" <?php if(strpos($carray['style'],'underline')!==FALSE)echo 'selected="selected"' ?>>下划线</option>
+       	</select></dd></dl>
+    <?php if($auser->checkgo('a_special') && !empty($specials)){ ?>
+    <dl><dt>所属专题：</dt><dd><select name="sid" id="sid">
+    	<option>选择所属专题</option>
+        <?php foreach($specials as $v){?>
+        <option value="<?php echo $v['sid']; ?>" <?php if($carray['sid']==$v['sid']){echo 'selected="selected"';}?>><?php echo $v['name']; ?></option>
+        <?php } ?>
+    </select></dd></dl>
+    <?php }else{ ?><input name="sid" type="hidden" value="0" /><?php } ?>
+    <dl><dt>排序：</dt><dd><input name="orders" type="text" class="int" style="width:30px;" value="<?php if($carray!=''){echo $carray['orders'];}else{echo '0';} ?>" /></dd><dd class="t">越大越靠前</dd></dl>
+    <dl><dt>关键词：</dt><dd><input name="keywords" type="text" class="int" value="<?php echo $carray['keywords'] ?>" /></dd><dd class="t">请使用英文逗号“,”分割</dd></dl>
+    <dl><dt>更新时间：</dt><dd><input name="addtime" type="text" class="int" value="<?php if($carray!=''){echo date('Y-m-d H:i',$carray['addtime']);}else{echo date('Y-m-d H:i');} ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" /></dd></dl>
+    <dl><dt>点击次数：</dt><dd><input name="hits" type="text" class="int" value="<?php if($carray!=''){echo $carray['hits'];}else{echo '0';} ?>" /></dd></dl>
+    <?php if(funsinfo('member','isshow')==1){ ?>
+    <dl><dt>访问权限：</dt><dd><select name="mrank">
+      <option value="0">全部开放</option>
+      <?php foreach($member_group as $v){ ?>
+      <option value="<?php echo $v['gid'] ?>"<?php if($carray['mrank']==$v['gid']){echo ' selected="selected"';}?>><?php echo $v['name'] ?></option>
+      <?php } ?>
+    </select></dd><dd class="t">选择后，只有大于等于此权限用户才可访问</dd></dl>
+    <?php }else{ ?><input name="mrank" type="hidden" value="0" /><?php } ?>
+	<?php if(funsinfo('pay','isshow')==1){ ?>
+    <dl><dt>消耗现金：</dt><dd><input name="mgold" type="text" class="int" style="width:60px;" value="<?php if($carray!=''){echo $carray['mgold'];}else{echo '0.00';} ?>" /> 元</dd><dd class="t">设置后，只有注册用户可访问本内容，并扣除相应现金</dd></dl>
+    <?php }else{ ?><input name="mgold" type="hidden" value="0" /><?php } ?>
+    <dl><dt>外部链接：</dt><dd><input name="gourl" type="text" class="int" value="<?php echo $carray['gourl'] ?>" /></dd><dd class="t">填写后，访问本内容时直接跳转自此地址</dd></dl>
+    <dl><dt>文件名：</dt><dd><input name="htmlfile" type="text" class="int" value="<?php echo $carray['htmlfile'] ?>" /></dd><dd class="t">生成静态及伪静态使用，格式如about，不要加后缀</dd></dl>
+    </div>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" id="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+</div>
+</body>
+</html>

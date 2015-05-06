@@ -1,0 +1,11 @@
+{if($record)}
+
+<li class="m"><span class="time">购买时间</span><span>购买数量</span>购买用户</li>
+{foreach $record as $r}
+<li><span class="time">{fun date('Y-m-d H:i:s',$r['stime'])}</span><span>{$r['num']}</span>{if($r['user'])}{$r['user']}{else}匿名用户{/if}</li>
+{/foreach}
+<ul class="pages">{$record_page}</ul>
+
+{else}
+暂时没有记录。
+{/if}

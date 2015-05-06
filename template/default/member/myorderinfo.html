@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的订单-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+		{include="member/menu.html"}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">我的订单</div>
+       <div class="member_f">
+        <dl><dt>订单号：</dt><dd>{$order['orderid']} <strong>状态：{fun order_state($order['state'])}</strong></dd></dl>
+{if($order['state']>0)}
+        <dl><dt>付款时间：</dt><dd>{fun date('Y-m-d H:i:s',$order['paytime'])}</dd></dl>
+        <dl><dt>支付平台：</dt><dd>
+        {if($order['payment']!='admin')}
+        {fun payment($order['payment'])}：{$order['paymentno']}
+        {else}
+        线下支付
+        {/if}
+        </dd></dl>
+        
+{/if}
+{if($order['state']>1)}
+	{if($order['virtual']==1)}
+        <dl><dt style="color:#C00; font-weight:bold">发货信息：</dt><dd>
+        <table class="ordertab" style="margin:10px 0;">
+		  <tr class="trbg">
+            <td>货号(卡号)</td>
+            <td>货密(卡密)</td>
+          </tr>
+         {foreach $virtuals as $vs}
+          <tr>
+            <td class="left">{$vs['number']}</td>
+            <td class="left">{fun dykeycode($vs['virtual'])}</td>
+          </tr>
+         {/foreach}
+        </table>
+        </dd></dl>
+    {else}
+    	<dl style="color:#C00"><dt>物流信息：</dt><dd>物流公司：{$sendgoods['logistics_name']} ：物流单号：{$sendgoods['invoice_no']}</dd></dl>
+	{/if}
+{/if}
+        {if($order['rnote'])}<dl style="color:#C00"><dt>处理反馈：</dt><dd>{$order['rnote']}</dd></dl>{/if}
+        <dl><dt>购买内容：</dt><dd><table class="ordertab" style="margin:10px 0;">
+		  <tr class="trbg">
+            <td>商品</td>
+            <td>单价</td>
+            <td>数量</td>
+            <td>物流</td>
+            <td>小计</td>
+          </tr>
+         {foreach $goods[0] as $v}
+          <tr>
+            <td class="left"><strong><a href="index.php?c=product&id={$v['aid']}" target="_blank">{$v['title']}</a></strong><br />{$v['attribute_txt']}</td>
+            <td>{$v['price']}</td>
+            <td>{$v['quantity']}</td>
+            <td>{if($order['virtual']!=1)}{$order['logistics']}<br />{$v['logistics_price']}元{else}自动发货{/if}</td>
+            <td><strong>{$v['total']}</strong>元</td>
+          </tr>
+         {/foreach}
+         <tr>
+            <td colspan="5" bgcolor="#F9F9F9">合计：<span id="total" style="font-weight:bold;">{$goods[1]}</span> 元{if($order['virtual']!=1)} (含运费){/if}</td>
+          </tr>
+        </table></dd></dl>
+        {if($order['favorable']!=0.00)}<dl><dt>优惠金额：</dt><dd>{$order['favorable']} 元</dd></dl>{/if}
+        <dl><dt>实际支付：</dt><dd><span class="aggregate">{$aggregate}</span> 元</dd></dl>
+        {if($order['virtual']!=1)}
+        <dl><dt>收货信息：</dt><dd>
+        <table cellspacing="5">
+       <tr><td align="right">真实姓名：</td><td>{$info['name']}</td></tr>
+       <tr><td align="right">手机：</td><td>{$info['phone']}</td></tr>
+       <tr><td align="right">固定电话：</td><td>{$info['tel']}</td></tr>
+       <tr><td align="right">Email：</td><td>{$info['email']}</td></tr>
+       <tr><td align="right">邮编：</td><td>{$info['zipcode']}</td></tr>
+       <tr><td align="right">所在省：</td><td>{$info['address1']}</td></tr>
+       <tr><td align="right">所在市：</td><td>{$info['address2']}</td></tr>
+       <tr><td align="right">详细地址：</td><td>{$info['address']}</td></tr>
+</table>
+        </dd></dl>
+        {/if}
+        {if($order['unote'])}<dl><dt>备注：</dt><dd>{$order['unote']}</dd></dl>{/if}
+        <dl><dt>下单时间：</dt><dd>{fun date('Y-m-d H:i:s',$order['addtime'])}</dd></dl>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

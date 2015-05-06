@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>会员资料-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+{include="js.html"}
+<script src="{$GLOBALS['WWW']}include/js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script charset="utf-8" src="{$GLOBALS['WWW']}include/js/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="{$GLOBALS['WWW']}include/js/kindeditor/lang/zh_CN.js"></script>
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+		{include="member/menu.html"}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：会员资料</div>
+       <div class="member_f">
+<form action="index.php?c=member&a=myinfo&go=1" method="post">
+       <dl><dt>用户名：</dt><dd>{$myinfo['user']}</dd><dd class="m"></dd></dl>
+       <dl><dt>原密码：</dt><dd><input type="password" name="pass" id="pass" class="inp" style="width:150px;"/></dd><dd class="m">不修改密码请留空</dd></dl>
+       <dl><dt>新密码：</dt><dd><input type="password" name="pass1" id="pass1" class="inp" style="width:150px;"/></dd><dd class="m">不修改密码请留空</dd></dl>
+       <dl><dt>确认新密码：</dt><dd><input type="password" name="pass2" class="inp" style="width:150px;"/></dd><dd class="m">不修改密码请留空</dd></dl>
+       {foreach $fields as $v}
+       <dl><dt>{$v['name']}</dt><dd>{$v['input']}</dd></dl>
+       {/foreach}
+       <dl style="border:0;"><dt>&nbsp;</dt><dd><input name="" type="submit" type="button" value="提交修改" class="btnbig" /></dd></dl>
+</form>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

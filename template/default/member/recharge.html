@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>在线充值-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+<script src="{$GLOBALS['WWW']}include/js/dyfrom.js" type="text/javascript"></script>
+<script type="text/javascript">
+function postform(){
+	if(!dyfrom_ismoney($("#recharge").val())){
+		alert('请输入正确的货币格式');
+		return false;
+	}
+	$("#mypost").submit();
+}
+</script>
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+		{include="member/menu.html"}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">在线充值</div>
+       <div class="member_f">
+       <form action="{$GLOBALS['WWW']}index.php?c=pay&a=recharge" method="post" id="mypost" target="_blank">
+       	 <dl><dt>&nbsp;</dt><dd>当前账户余额为 <strong style="font-size:14px; color:#C00">{$mymoney}</strong> 元</dd></dl>
+         <dl><dt>充值金额：</dt><dd><input name="recharge" id="recharge" class="inp" style="width:90px;" type="text" /> 元</dd></dl>
+         <dl><dt>支付方式：</dt><dd>
+         {if($payment)}
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+         {foreach $payment as $v}
+          <tr>
+            <td><input name="payment" id="payment_{$v['pay']}" type="radio" value="{$v['pay']}" {if($v['n']==1)}checked="checked"{/if} /></td>
+            <td style="padding:5px;"><label for="payment_{$v['pay']}"><img src="{$GLOBALS['WWW']}include/payment/{$v['pay']}.gif" style="cursor:pointer" /></label></td>
+          </tr>
+         {/foreach}
+        </table>
+        {else}
+        未设置在线支付平台，暂无法充值。
+        {/if}
+         </dd></dl>
+         <dl style="border:0;"><dt>&nbsp;</dt><dd><input type="button" value="立即充值" class="btnbig" onclick="postform()" /></dd></dl>
+       </form>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

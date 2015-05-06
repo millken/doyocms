@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script charset="utf-8" src="include/js/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="include/js/kindeditor/lang/zh_CN.js"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('#body1', {
+		fileManagerJson : '<?php echo $GLOBALS["G_DY"]["url"]["url_path_base"];?>?c=uploads&a=filemanager',
+		allowFileManager : true,
+		filePostName : 'editor_KindEditor',
+		filterMode : false,
+		uploadJson : '<?php echo $GLOBALS["G_DY"]["url"]["url_path_base"];?>?c=uploads&tid='+$("#tid").attr("value")+'&isfiles=editor_KindEditor'
+	});
+});
+$(function(){
+	fieldsinfo();
+	$("#tid").change(function(){
+		fieldsinfo();
+	});
+	$("#tid option[class='hidden']").remove();
+});
+function fieldsinfo(){
+	$("#fieldsinfo").empty();
+	$("#fieldsinfo").append("<dl><dt>&nbsp;</dt><dd><img src='include/js/doyoupload/loading.gif' /></dd>");
+	$.ajax({
+		url: '?c=a_fields&a=info',type: 'post',
+		//async:false,
+		cache: false,
+		data: "tid="+$("#tid").attr("value")+"&molds=<?php echo $molds;?>&id=<?php echo $carray['id'];?>",
+		success: function(html){
+			$("#fieldsinfo").empty();
+			$("#fieldsinfo").append(html);
+		}
+	});
+}
+function delfieldall(fieldid){
+	$("#"+fieldid).remove();
+}
+</script>
+</head>
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main">
+	<div class="info">
+    <form action="?c=a_<?php echo $molds ?>&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="id" type="hidden" value="<?php echo $carray['id'] ?>" />
+    <div id="infos1">
+    <dl style="border:0;"><dt>所属栏目：</dt><dd><select name="tid" id="tid">
+    	<option>选择所属栏目</option>
+        <?php foreach($typesdb as $v){ if($auser->checkclass($v['tid'])){?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!=$molds)echo ' class="hidden"'; ?> <?php if($carray['tid']==$v['tid'] || $itid==$v['tid']){echo 'selected="selected"';}?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+        <?php }} ?>
+    </select>
+    </dd></dl>
+    
+    <?php if($carray['fmolds'] && $carray['faid']){ ?>
+    <dl><dt>来自：</dt><dd><?php echo moldsinfo($carray['fmolds'],'moldname');?>:<?php echo contentinfo($carray['fmolds'],$carray['faid'],'title');?><br />
+    内容ID：<input name="faid" type="text" class="int" value="<?php echo $carray['faid'] ?>" style="width:30px;" />
+    &nbsp;所在频道：<input name="fmolds" type="text" class="int" value="<?php echo $carray['fmolds'] ?>" style="width:50px;" />
+    </dd></dl>
+    <?php } ?>
+    
+    <dl><dt>会员：</dt><dd><input name="user" type="text" class="int" value="<?php echo $carray['user'] ?>" style="width:100px;" /></dd></dl>
+    <dl><dt>标题：</dt><dd><input name="title" type="text" class="int" value="<?php echo $carray['title'] ?>" style="width:300px;" /></dd></dl>
+    <span id="fieldsinfo"></span>
+    <dl><dt>内容：</dt><dd><textarea name="body" id="body1" style="width:670px;height:300px;" class="int"><?php echo $carray['body'] ?></textarea></dd></dl>
+    <dl><dt>回复：</dt><dd><textarea name="reply" style="width:450px; height:100px;" class="int"><?php echo $carray['reply'] ?></textarea></dd></dl>
+    <?php if($auser->checkgo('a_'.$molds,'audit')){ ?>
+    <dl><dt>审核：</dt><dd><label><input name="isshow" type="radio" value="1"<?php if($carray['isshow']==1 || $carray=='')echo ' checked="checked"' ?> />已审</label> <label><input type="radio" name="isshow" value="0"<?php if($carray['isshow']==0 && $carray!='')echo ' checked="checked"' ?> />未审</label> </dd></dl>
+    <?php } ?>
+    <dl><dt>排序：</dt><dd><input name="orders" type="text" class="int" style="width:30px;" value="<?php if($carray!=''){echo $carray['orders'];}else{echo '0';} ?>" /></dd><dd class="t">越大越靠前</dd></dl>
+    <dl><dt>回复时间：</dt><dd><input name="retime" type="text" class="int" value="<?php if($carray['retime']==''){echo date('Y-m-d H:i',$carray['retime']);}else{echo date('Y-m-d H:i');} ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" /></dd></dl>
+    </div>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" id="submit" value="提 交" class="btnbig" onclick="upallimg();"/></dd></dl>
+    </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<?php if($postgo){ ?>
+<div class="main"><div class="oper"><a href="?c=<?php echo $Get_c; ?>">推荐属性管理</a><a href="?c=<?php echo $Get_c; ?>&a=add">添加推荐属性</a></div>
+	<div class="info">
+    <form action="?c=<?php echo $Get_c; ?>&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="id" type="hidden" value="<?php echo $d['id'] ?>" />
+    <dl><dt>属性名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $d['name'] ?>" /></dd></dl>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+</div>
+<?php }else{ ?>
+<div class="main"><div class="oper"><a href="?c=<?php echo $Get_c; ?>">推荐属性管理</a><a href="?c=<?php echo $Get_c; ?>&a=add">添加推荐属性</a></div>
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="40">ID</td>
+    <td>属性名称</td>
+    <td width="220">操作</td>
+  </tr>
+<?php foreach($lists as $v){ ?>
+  <tr>
+    <td><?php echo $v['id']; ?></td>
+    <td class="tdleft"><a href="?c=<?php echo $Get_c; ?>&a=edit&id=<?php echo $v['id']; ?>"><?php echo $v['name']; ?></a></td>
+    <td><a href="?c=<?php echo $Get_c; ?>&a=edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<a href="?c=<?php echo $Get_c; ?>&a=del&id=<?php echo $v['id']; ?>">删除</a></td>
+  </tr>
+<?php } ?>
+</table>
+</div>
+<?php } ?>
+</body>
+</html>

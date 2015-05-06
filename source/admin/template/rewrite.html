@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style type="text/css">
+body { font-family:Arial; margin:0}
+.main{padding:10px;}
+p{ border-top:2px solid #CCC; background-color:#F9F9F9; padding:15px; font-size:18px; font-weight:bold; margin:0;}
+pre{  font-family:Arial; line-height:150%;border-bottom:2px solid #CCC; background-color:#F9F9F9;padding:0 20px 0 35px; margin-top:0;}
+</style>
+</head>
+<body>
+<div class="main" style="margin-top:20px;"><strong>各主机规则使用方法请咨询您的主机商</strong></div>
+<div class="main">
+
+<p>Apache Web Server(独立主机用户)</p>
+<pre>&lt;IfModule mod_rewrite.c&gt;
+RewriteEngine On
+<?php echo $apache;?>
+&lt;/IfModule&gt;
+
+
+</pre>
+
+<p>Apache Web Server(虚拟主机用户)</p>
+<pre># 将 RewriteEngine 模式打开
+RewriteEngine On
+
+# 修改以下语句中的 / 改为您的DOYO系统目录地址，如果程序放在根目录中则无需修改
+RewriteBase /
+
+# Rewrite 系统规则请勿修改
+<?php echo $apache1;?>
+
+
+</pre>
+
+<p>IIS Web Server(独立主机用户)</p>
+<pre># 将 RewriteEngine 模式打开
+[ISAPI_Rewrite]
+
+# 3600 = 1 hour
+CacheClockRate 3600
+
+RepeatLimit 32
+
+# Protect httpd.ini and httpd.parse.errors files
+# from accessing through HTTP
+<?php echo $iis;?>
+
+
+</pre>
+
+<p>IIS7 Web Server(独立主机用户)</p>
+<pre>&lt;rewrite&gt;
+&lt;rules&gt;
+<?php echo $iis7;?>
+&lt;/rules&gt;
+&lt;/rewrite&gt;
+
+
+</pre>
+
+<p>Nginx Web Server</p>
+<pre><?php echo $nginx;?>
+if (!-e $request_filename) {
+	return 404;
+}
+
+
+</pre>
+
+
+</div>
+</body>
+</html>

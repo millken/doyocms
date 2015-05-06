@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript">
+function getok(url,name){
+    if(confirm("你确认要安装["+name+"]吗？")){window.location.href = url;}
+}
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<?php if($a=='edit'){ ?>
+<div class="main">
+	<div class="info">
+    <form action="?c=<?php echo $Get_c; ?>&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="fid" type="hidden" value="<?php echo $d['fid'] ?>" />
+    <dl><dt>插件名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $d['name'] ?>" /></dd></dl>
+    <dl><dt>插件状态：</dt><dd><input <?php if($d['isshow']==1 || $d['isshow']==''){echo 'checked="checked"';} ?> name="isshow" type="radio" value="1" />开启 <input <?php if($d['isshow']=='0'){echo 'checked="checked"';} ?> name="isshow" type="radio" value="0" />关闭</dd></dl>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+</div>
+<?php } ?>
+<?php if($a==''){ ?>
+<div class="main">
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td class="tdleft">&nbsp;已开启插件</td>
+    <td width="120">插件标识</td>
+    <td width="120">状态</td>
+    <td width="150">操作</td>
+  </tr>
+<?php foreach($lists as $v){ ?>
+  <tr>
+    <td class="tdleft"><a href="?c=<?php echo $Get_c; ?>&a=edit&fid=<?php echo $v['fid']; ?>"><?php echo $v['name']; ?></a></td>
+    <td><?php echo $v['funs']; ?></td>
+    <td><?php if($v['isshow']==1){echo '开启';}else{echo '<span style="color:#C00">关闭</span>';} ?></td>
+    <td><a href="?c=<?php echo $Get_c; ?>&a=edit&fid=<?php echo $v['fid']; ?>">编辑</a></td>
+  </tr>
+<?php } ?>
+  <tr class="trbg">
+    <td class="tdleft">&nbsp;已关闭插件</td>
+    <td width="120">插件标识</td>
+    <td width="120">状态</td>
+    <td width="150">操作</td>
+  </tr>
+<?php foreach($lists_no as $v){ ?>
+  <tr>
+    <td class="tdleft"><a href="?c=<?php echo $Get_c; ?>&a=edit&fid=<?php echo $v['fid']; ?>"><?php echo $v['name']; ?></a></td>
+    <td><?php echo $v['funs']; ?></td>
+    <td><?php if($v['isshow']==1){echo '开启';}else{echo '<span style="color:#C00">关闭</span>';} ?></td>
+    <td><a href="?c=<?php echo $Get_c; ?>&a=edit&fid=<?php echo $v['fid']; ?>">编辑</a></td>
+  </tr>
+<?php } ?>
+</table>
+</div>
+<?php } ?>
+</body>
+</html>

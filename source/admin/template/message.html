@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("#tid option[class='hidden']").remove();
+	$(".searchauto").change(function(){$("#search").submit();});
+});
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main" id="main">
+<table width="100%">
+  <tr>
+    <td>
+    <form action="" method="get" id="search">
+    <input name="c" type="hidden" value="a_<?php echo $molds ?>" />
+     <select name="isshow" class="searchauto">
+      <option value="">是否审核</option>
+      <option value="1" <?php if(syClass('syController')->syArgs('isshow')==1){echo 'selected="selected"';}?>>已审</option>
+      <option value="2" <?php if(syClass('syController')->syArgs('isshow')==2){echo 'selected="selected"';}?>>未审</option>
+    </select>
+    <select name="tid" class="searchauto" id="tid">
+      <option>所有栏目</option>
+       <?php foreach($typesdb as $v){ if($auser->checkclass($v['tid'])){?>
+        <option value="<?php echo $v['tid']; ?>"<?php if($v['molds']!=$molds)echo ' class="hidden"'; ?> <?php if(syClass('syController')->syArgs('tid')==$v['tid']){echo 'selected="selected"';}?>><?php echo str_repeat('—',$v['n']).$v['name']; ?></option>
+       <?php }} ?>
+    </select>
+    标题：<input name="title" type="text" style="width:120px;" value="<?php echo syClass('syController')->syArgs('title',1); ?>" />
+    <input name="search" type="submit" value="查找" class="btnmini" />
+    </form></td>
+  </tr><tr><td height="5"></td></tr>
+</table>
+<form id="formall" action="?c=a_<?php echo $molds ?>&a=alledit" method="post">
+<input name="go" id="go" type="hidden" value="" />
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="40">ID</td>
+    <td width="50">选择</td>
+    <td>标题</td>
+    <td width="100">状态</td>
+    <td width="120">发布时间</td>
+    <td width="120">是否回复</td>
+    <td width="120">操作</td>
+  </tr>
+<?php foreach($listarray as $v){ ?>
+  <tr>
+    <td><?php echo $v['id']; ?></td>
+    <td><input name="ids[]" type="checkbox" value="<?php echo $v['id']; ?>" /></td>
+    <td class="tdleft"><?php if($auser->checkgo('a_'.$molds,'edit')){?>
+    <a href="?c=a_<?php echo $molds ?>&a=edit&id=<?php echo $v['id']; ?>"><?php echo $v['title']; ?></a>
+    <?php }else{echo $v['title'];} ?><?php if($v['trait'])echo '<span style="color:#C00">'.traitinfo($v['trait']).'</span>'; ?></td>
+    <td><?php if($v['isshow']==1){echo '已审';}else{echo '<span style="color:#C00">未审</span>';} ?></td>
+    <td><?php echo date('Y-m-d H:i',$v['addtime']); ?></td>
+    <td><?php if($v['reply']!=''){echo '已回复';}else{echo '<span style="color:#C00">未回复</span>';} ?></td>
+    <td><?php if($auser->checkgo('a_'.$molds,'edit')){?><a href="?c=a_<?php echo $molds ?>&a=edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<?php } ?><?php if($auser->checkgo('a_'.$molds,'del')){?>&nbsp;&nbsp;<a href="?c=a_<?php echo $molds ?>&a=del&id=<?php echo $v['id']; ?>">删除</a><?php } ?></td>
+  </tr>
+<?php } ?>
+</table>
+<table width="100%">
+  <tr>
+  <td height="35"><ul class="pages"><?php echo $pages; ?></ul></td>
+
+    <td align="right"><input id="allcheck" type="button" value="全选" class="btnmini" onclick="alls('ids[]','allcheck');" />&nbsp;
+    <?php if($auser->checkgo('a_'.$molds,'audit')){?>
+        <?php if($isshow==1){ ?>
+        <input name="g1" type="button" value="取消审核" class="btnmini" onclick="forma(1);" />
+        <?php }else{ ?>
+        <input name="g1" type="button" value="审核" class="btnmini" onclick="forma(0);" />
+        <?php } ?>
+    <?php } ?>
+    <?php if($auser->checkgo('a_'.$molds,'del')){?>
+    &nbsp;<input name="g2" type="button" value="删除" class="btnmini" onclick="forma(2);" />
+    <?php } ?></td>
+
+    </tr>
+</table>
+</form>
+</div>
+</body>
+</html>

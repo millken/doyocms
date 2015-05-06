@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><?php echo $opers ?></div>
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="40">ID</td>
+    <td>专题名称</td>
+    <td width="80">快捷</td>
+    <td width="320">操作</td>
+  </tr>
+<?php foreach($lists as $v){?>
+  <tr>
+    <td><?php echo $v['sid']; ?></td>
+    <td class="tdleft"><a href="?c=<?php echo $Get_c; ?>&a=edit&sid=<?php echo $v['sid']; ?>"><?php echo $v['name']; ?></a></td>
+    <td><a href="?c=a_<?php echo $v['molds']; ?>&sid=<?php echo $v['sid']; ?>">内容管理</a></td>
+    <td><a href="index.php?c=special&sid=<?php echo $v['sid']; ?>" target="_blank">预览</a>&nbsp;&nbsp;
+    <a href="?c=<?php echo $Get_c; ?>&a=edit&sid=<?php echo $v['sid']; ?>">编辑</a>&nbsp;&nbsp;
+	<a href="?c=<?php echo $Get_c; ?>&a=del&sid=<?php echo $v['sid']; ?>">删除</a></td>
+  </tr>
+<?php } ?>
+</table>
+</div>
+</body>
+</html>

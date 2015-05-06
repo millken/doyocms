@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/dyfrom.js" type="text/javascript"></script>
+<script type="text/javascript">
+function virtual_add(){
+	value=$("#number").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 100)){
+		alert('货号(卡号)不能为空，并且不能大于100个字符');return false;
+	}
+	value=$("#virtual").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 200)){
+		alert('货密(卡密)不能为空，并且不能大于200个字符');return false;
+	}
+	$("#ajaxhtml").html("正在添加信息，请稍后...");
+	$.ajax({
+		url: "<?php echo $get; ?>&url=<?php echo $url; ?>&run=1",type: 'post',
+		//async:false,
+		cache: false,
+		data: "number="+$("#number").attr("value")+"&virtual="+$("#virtual").attr("value"),
+		success: function(html){
+			$("#ajaxhtml").empty();
+			if(html=='ok'){
+				$("#ajaxhtml").html($("#number").attr("value")+"添加成功！");
+				$("#number").attr("value","");
+				$("#virtual").attr("value","");
+			}else{
+				$("#ajaxhtml").html($("#number").attr("value")+"添加失败，原因："+html);
+			}
+		}
+	});
+}
+function godel(id,number){
+	if (confirm("你确定要删除"+number+"吗？")){
+		window.location.href="<?php echo $get; ?>&url=del&id="+id;
+	}
+}
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><a href="<?php echo $get; ?>">虚拟货物管理</a><a href="<?php echo $get; ?>&url=add">添加虚拟货物</a></div>
+
+<?php if($url=='add'||$url=='edit'){ ?>
+	<div class="info">
+    <form action="<?php echo $get; ?>&url=<?php echo $url; ?>&run=1" method="post">
+    <input name="aid" type="hidden" value="<?php echo $product['id'] ?>" />
+    <input name="id" type="hidden" value="<?php echo $d['id'] ?>" />
+    <dl><dt>所属商品：</dt><dd><?php echo $product['title']; ?></dd></dl>
+    <dl><dt>货号(卡号)：</dt><dd><input name="number" id="number" type="text" class="int" value="<?php echo  $d['number'] ?>" /></dd><dd class="t">请填写例如卡号等信息，每件虚拟货物一个，作为唯一标识。</dd></dl>
+    <?php 
+    if($url=='edit'){
+    	$v=dykeycode($d['virtual']);
+        $v=dykey_x($v);
+    }else{
+    	$v='';
+    }
+    ?>
+    <dl><dt>货密(卡密)：</dt><dd><textarea name="virtual" id="virtual" style="width:300px; height:50px;" class="int" ><?php echo $v ?></textarea></dd><dd class="t">请填写例如卡密码等信息，商品购买成功后，将发送此内容给用户。</dd></dl>
+    <?php if($url=='edit'){ ?>
+    <dl><dt>状态：</dt><dd><?php if($d['state']==1){echo '已售 <a href="?c=a_goods&a=orderedit&id='.$d['oid'].'">[查看所属订单]</a>';}else{echo '<strong>未售</strong>';} ?></dd></dl>
+    <?php } ?>
+    <?php if($url=='add'){ ?>
+    <dl><dt>&nbsp;</dt><dd><input type="button" value="提 交" class="btnbig" onclick="virtual_add();" /></dd><dd id="ajaxhtml" style="color:#C00"></dd></dl>
+    <?php }else{ ?>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    <?php } ?>
+    </form>
+    </div>
+<?php }else{ ?>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td width="40">ID</td>
+        <td>序列号</td>
+        <td width="80">状态</td>
+        <td width="220">操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td><?php echo $v['id']; ?></td>
+        <td class="tdleft"><a href="<?php echo $get; ?>&url=edit&id=<?php echo $v['id']; ?>"><?php echo $v['number']; ?></a></td>
+        <td><?php if($v['state']==1){echo '已售';}else{echo '<strong>未售</strong>';} ?></td>
+        <td><a href="<?php echo $get; ?>&url=edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<a href="#" onclick="godel(<?php echo $v['id']; ?>,'<?php echo $v['number']; ?>');">删除</a></td>
+      </tr>
+    <?php } ?>
+    </table>
+<?php } ?>
+</div>
+</body>
+</html>

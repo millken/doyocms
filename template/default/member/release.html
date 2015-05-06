@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$type['title']}-{$GLOBALS['S']['title']}</title>
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+<script src="{$GLOBALS['WWW']}include/js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script charset="utf-8" src="{$GLOBALS['WWW']}include/js/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="{$GLOBALS['WWW']}include/js/kindeditor/lang/zh_CN.js"></script>
+<script src="{$GLOBALS['WWW']}include/js/dyfrom.js" type="text/javascript"></script>
+<script type="text/javascript">
+function postform(){
+	value=$("#title").val();
+	if(!dyfrom_null(value)||!dyfrom_max(value, 100)){
+		alert('标题不能为空，并且不能大于100个字符');return false;
+	}
+	value=$("#body").val();
+	if(!dyfrom_max(value, 10000)){
+		alert('内容不能大于10000个字符');return false;
+	}
+{if($GLOBALS['G_DY']['vercode']==1)}
+	value=$("#vercode").val();
+	if(dyfrom_ajax("{$GLOBALS['WWW']}index.php?c=ajax&a=vercode","vercode="+value)=='false'){
+		alert('验证码输入错误');return false;
+	}
+{/if}
+	return true;
+}
+</script>
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>会员中心</h2></div>
+      <div class="columncl">
+		{include="member/menu.html"}
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：{$type['classname']}  &gt;  {if($id)}修改内容{else}发布内容{/if}</div>
+       <div class="member_f">
+<form action="index.php?c=member&a=release&tid={$type['tid']}&hand={$hand}&id={$id}&go=1" method="post" onsubmit="return postform();">
+       {foreach $fields as $v}
+       <dl><dt>{$v['name']}</dt><dd>{$v['input']}</dd>{if($v['m'])}<dd class="m">{$v['m']}</dd>{/if}</dl>
+       {/foreach}
+{if($GLOBALS['G_DY']['vercode']==1)}  
+       <dl><dt>验证码：</dt><dd><input type="text" name="vercode" id="vercode" class="inp" style="width:80px;"/></dd><dd><img src="{$GLOBALS['WWW']}include/vercode.php" id="vercodeimg" width="60" height="25" onclick="newvercode();" style="cursor:pointer;" /></dd><dd class="m"></dd></dl>
+<script type="text/javascript">
+setTimeout('newvercode()',1000);
+function newvercode(){
+	document.getElementById("vercodeimg").src="{$GLOBALS['WWW']}include/vercode.php?a="+Math.random();
+}
+</script>
+{/if}
+       <dl style="border:0;"><dt>&nbsp;</dt><dd><input type="submit" value="{if($id)}提交修改{else}立即发布{/if}" class="btnbig" /></dd></dl>
+</form>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

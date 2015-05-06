@@ -1,0 +1,7 @@
+<div class="list">
+{foreach $comment as $s}
+<dl><dt>{$s['user']} 在 {fun date('Y-m-d H:i:s',$s['addtime'])} 评论：</dt>
+<dd>{$s['body']}{if($s['reply'])}<br /><span style="color:#C00">管理员回复：{$s['reply']}</span>{/if}</dd></dl>
+{/foreach}
+</div>
+<ul class="c pages">{$comment_page}</ul>

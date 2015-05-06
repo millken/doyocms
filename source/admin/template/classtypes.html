@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+function closec(tid){
+	if ($.browser.msie) {
+		if($("."+tid).css('display')=='inline'){
+			$("."+tid).css('display','none');
+			$("#"+tid).attr('class', 'classico1');
+		}else{
+			$("."+tid).css('display','inline');
+			$("#"+tid).attr('class', 'classico2');
+		}
+	}else{
+		if($("."+tid).css('display')=='table-row'){
+			$("."+tid).css('display','none');
+			$("#"+tid).attr('class', 'classico1');
+		}else{
+			$("."+tid).css('display','table-row');
+			$("#"+tid).attr('class', 'classico2');
+		}
+	}
+}
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main">
+<table width="100%" class="tablist">
+  <tr class="trbg">
+    <td width="30">ID</td>
+    <td width="30">排序</td>
+    <td>栏目名称</td>
+    <td width="110">所属频道</td>
+    <td width="100">快捷</td>
+    <td width="210">栏目操作</td>
+  </tr>
+<form id="formall" action="?c=a_classtypes&a=alledit" method="post">
+<input name="go" id="go" type="hidden" value="" />
+<?php foreach($lists as $v){
+if($auser->checkclass($v['tid'])){
+if($v['n']==0)$c=$v['tid'];
+?>
+  <tr<?php if($v['n']>0){echo ' class="c'.$c.'" style="display:none;"';}else{echo ' class="classp"' ;} ?>>
+    <td><?php echo $v['tid']; ?></td>
+    <td><input class="int" name="orders[<?php echo $v['tid']; ?>]" type="text" value="<?php echo typeinfo($v['tid'],'orders'); ?>" style="width:30px; text-align:center; padding:2px;" /></td>
+    <td class="tdleft"><?php if($v['n']==0){echo '<span class="classico1" id="c'.$c.'" onclick=closec("c'.$c.'")></span>';}?><?php if($auser->checkgo('a_'.$v['molds'].'_','',1)){?>
+    <span style="color:#CCC"><?php if($v['n']>0){echo '|';}echo str_repeat('—',$v['n']); ?></span><?php if($auser->checkgo('a_classtypes','edit')){?><a href="?c=<?php echo $Get_c; ?>&a=edit&tid=<?php echo $v['tid']; ?>"><?php echo $v['name']; ?></a><?php }else{echo $v['name'];} ?>
+    <?php }else{echo $v['name'];} ?></td>
+    <td><?php echo moldsinfo($v['molds'],'moldname'); ?></td>
+    <td><?php if($auser->checkgo('a_classtypes','add')){?><a href="?c=<?php echo $Get_c; ?>&a=add&tid=<?php echo $v['tid']; ?>">添加下级栏目</a><?php } ?></td>
+    <td>
+    <?php if(moldsinfo($v['molds'],'sys')==1){ ?>
+    <a href="index.php?c=<?php echo $v['molds'] ?>&a=type&tid=<?php echo $v['tid']; ?>" target="_blank">
+    <?php }else{ ?>
+    <a href="index.php?c=channel&a=type&tid=<?php echo $v['tid']; ?>" target="_blank">
+    <?php } ?>
+    预览</a>&nbsp;&nbsp;
+    <?php if($auser->checkgo('a_fields')){?><a href="?c=a_fields&molds=<?php echo $v['molds']; ?>&tid=<?php echo $v['tid']; ?>">字段管理</a>&nbsp;&nbsp;<?php } ?>
+    <?php if($auser->checkgo('a_classtypes','edit')){?><a href="?c=<?php echo $Get_c; ?>&a=edit&tid=<?php echo $v['tid']; ?>">编辑</a>&nbsp;&nbsp;<?php } ?>
+	<?php if($auser->checkgo('a_classtypes','del')){?><a href="?c=<?php echo $Get_c; ?>&a=del&tid=<?php echo $v['tid']; ?>">删除</a><?php } ?></td>
+  </tr>
+<?php }} ?>
+<tr><td colspan="6" class="tdleft">
+    <?php if($auser->checkgo('a_classtypes','edit')){?>
+    &nbsp;<input name="g3" type="button" value="提交排序" class="btnmini" onclick="forma(1);" />
+    <?php } ?>
+</td></tr></table>
+</form>
+</div>
+</body>
+</html>

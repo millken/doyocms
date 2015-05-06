@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script charset="utf-8" src="include/js/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="include/js/kindeditor/lang/zh_CN.js"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	var editor = KindEditor.create('#body1',{
+		fileManagerJson : '<?php echo $GLOBALS["G_DY"]["url"]["url_path_base"];?>?c=uploads&a=filemanager',
+		allowFileManager : true,
+		filePostName : 'editor_KindEditor',filterMode : false,
+		uploadJson : '<?php echo $GLOBALS["G_DY"]["url"]["url_path_base"];?>?c=uploads&tid='+$("#tid").attr("value")+'&isfiles=editor_KindEditor'
+	});
+});
+</script>
+</head>
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><?php echo $opers ?></div>
+<ul class="switchs"><li id="s1">基本设置</li><li id="s2" class="c">专题介绍</li><li id="s3" class="c">高级设置</li></ul>
+	<div class="info">
+    <form action="?c=<?php echo $Get_c; ?>&a=<?php echo $postgo ?>&run=1" method="post">
+    <input name="sid" type="hidden" value="<?php echo $carray['sid'] ?>" />
+    <div id="infos1">
+    <dl style="border:0;"><dt>所属频道：</dt><dd>
+    <select name="molds" id="mid">
+        <?php foreach($moldsop as $v){ ?>
+        <option value="<?php echo $v['molds']; ?>" <?php if($carray['molds']==$v['molds']){echo 'selected="selected"';}?>><?php echo $v['moldname']; ?></option>
+        <?php } ?>
+    </select>
+    </dd></dl>
+    <dl><dt>专题名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $carray['name'] ?>" /></dd><dd>排序：</dd><dd><input name="orders" type="text" class="int" style="width:30px;" value="<?php if($carray!=''){echo $carray['orders'];}else{echo '0';} ?>" /></dd><dd class="t">越大越靠前</dd></dl>
+    <dl><dt>默认专题首页：</dt><dd>
+<label><input type="radio" name="isindex" value="1" <?php if($carray=='' || $carray['isindex']=='1'){echo 'checked="checked"';} ?> /><strong>专题列表</strong>(显示所有内容列表分页)</label><br />
+<label><input type="radio" name="isindex" value="2" <?php if($carray['isindex']=='2'){echo 'checked="checked"';} ?> /><strong>专题介绍</strong>(显示专题介绍)</label><br />
+<label><input type="radio" name="isindex" value="0" <?php if($carray['isindex']=='0'){echo 'checked="checked"';} ?> /><strong>自定义首页</strong>(显示自定义的首页)</label></dd></dl>
+	<dl><dt>状态：</dt><dd><label><input name="isshow" type="radio" value="1"<?php if($carray['isshow']==1 || $carray=='')echo ' checked="checked"' ?> />开启</label> <label><input type="radio" name="isshow" value="0"<?php if($carray['isshow']==0 && $carray!='')echo ' checked="checked"' ?> />关闭</label> </dd></dl>
+    </div>
+    <div id="infos2" class="none">
+    <dl style="border:0;"><dt>专题介绍：</dt><dd><textarea name="body" id="body1" style="width:670px; height:400px;"><?php echo $carray['body'] ?></textarea></dd></dl>
+    </div>
+    <div id="infos3" class="none">
+    <dl style="border:0;"><dt>专题链接：</dt><dd><input name="gourl" type="text" class="int" value="<?php echo $carray['gourl'] ?>" /></dd><dd class="t">填写后，专题将作为外部链接直接跳转自此地址</dd></dl>
+    <dl id="litpicover" class="fileover" style="<?php if($carray['litpic']!='')echo 'display:block;';?>"><dt>&nbsp;</dt><?php if($carray['litpic']!=''){echo '<dd><img src="'.$carray['litpic'].'" height="50" /></dd>';} ?></dl>
+    <dl><dt>专题缩略图：</dt><dd><input name="litpic" id="litpic" type="text" class="int" value="<?php echo $carray['litpic'] ?>" /></dd><dd><iframe frameborder="0" width="300" height="26" scrolling="No" name="litpic" src="?c=uploads&a=loadup&inputid=litpic&fileExt=*.jpg;*.jpeg;*.gif;*.png&fileover=1"></iframe></dd></dl>
+    <dl><dt>专题SEO标题：</dt><dd><input name="title" type="text" class="int" value="<?php echo $carray['title'] ?>" /></dd><dd class="t">显示于页面 meta title</dd></dl>
+    <dl><dt>专题SEO关键词：</dt><dd><input name="keywords" type="text" class="int" value="<?php echo $carray['keywords'] ?>" /></dd><dd class="t">显示于页面 meta keywords</dd></dl>
+    <dl><dt>专题简介：</dt><dd><textarea name="description" class="int" style="width:300px; height:50px;"><?php echo $carray['description'] ?></textarea></dd><dd class="t">显示于页面 meta description</dd></dl>
+    <dl><dt>列表调用条数：</dt><dd><input name="listnum" type="text" class="int" style="width:30px;"value="<?php if($carray!=''){echo $carray['listnum'];}else{echo '20';} ?>" /></dd><dd class="t">专题列表默认调用条数</dd></dl>
+    <dl><dt>静态生成目录：</dt><dd><input name="htmldir" type="text" class="int" value="<?php echo $carray['htmldir'];?>" /></dd><dd class="t">留空则系统自动分配，"/"代表根目录</dd></dl>
+    <dl><dt>静态文件名：</dt><dd><input name="htmlfile" type="text" class="int" value="<?php echo $carray['htmlfile'];?>" /></dd><dd class="t">格式如about，不要加后缀，留空则为index</dd></dl>
+    <dl><dt>&nbsp;</dt><dd class="t">以下模板放于<?php echo '/template/'.syExt('view_themes').'/'; ?>special目录中</dd></dl>
+    <dl><dt>专题自定义模板：</dt><dd><input name="t_index" type="text" class="int" value="<?php if($carray['t_index']!=''){echo $carray['t_index'];}else{echo 'specia.html';} ?>" /></dd></dl>
+    <dl><dt>专题列表模板：</dt><dd><input name="t_list" type="text" class="int" value="<?php if($carray['t_list']!=''){echo $carray['t_list'];}else{echo 'specia_list.html';} ?>" /></dd></dl>
+    <dl><dt>专题介绍模板：</dt><dd><input name="t_listb" type="text" class="int" value="<?php if($carray['t_listb']!=''){echo $carray['t_listb'];}else{echo 'specia_body.html';} ?>" /></dd></dl>
+    </div>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+</div>
+</body>
+</html>

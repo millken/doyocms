@@ -1,0 +1,20 @@
+{foreach $typemenu as $v}
+<a href="?c=member&a=mylist&tid={$v['tid']}">{$v['classname']}</a>
+{/foreach}
+{if($molds_message['isshow'])}
+<a href="?c=member&a=mymessage">我的{$molds_message['moldname']}</a>
+{/if}
+{if($fun_comment['isshow'])}
+<a href="?c=member&a=mycomment">我的{$fun_comment['name']}</a>
+{/if}
+{if(funsinfo('goods','isshow'))}
+<a href="?c=member&a=myorder">我的订单</a>
+<a href="?c=pay&cart=1" target="_blank">我的购物车</a>
+{/if}
+{if(funsinfo('pay','isshow'))}
+<a href="?c=member&a=mymolds">我购买的内容</a>
+<a href="?c=member&a=recharge">在线充值</a>
+<a href="?c=member&a=account">财务记录</a>
+{/if}
+<a href="?c=member&a=myinfo">修改资料</a>
+<a href="?c=member&a=out" class="c">退出登录</a>

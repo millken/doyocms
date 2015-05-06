@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支付中心-{$GLOBALS['S']['title']}</title>
+<meta name="keywords" content="{$type['keywords']} " />
+<meta name="description" content="{$type['description']} " />
+<link href="{$GLOBALS['skin']}style/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var site_dir="{$GLOBALS['WWW']}";
+</script>
+{include="js.html"}
+</head>
+
+<body>
+{include="head.html"}
+<div class="wpm list">
+  <div class="tab11"></div>
+  <div class="tab1 tab1b main">
+    <div class="l">
+      <div class="columnc"><h2>在线客服</h2></div>
+      <div class="columncl">
+            <a>Tel :0719-8689805</a>
+            <a>Email :hi@wdoyo.com</a>
+            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2373088201&site=qq&menu=yes">客服1：<img border="0" src="http://wpa.qq.com/pa?p=2:2373088201:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1522066607&site=qq&menu=yes">客服2：<img border="0" src="http://wpa.qq.com/pa?p=2:1522066607:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2514159326&site=qq&menu=yes">客服3：<img border="0" src="http://wpa.qq.com/pa?p=2:2514159326:42" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+      </div>
+    </div>
+    <div class="r">
+    <div class="content">
+       <div class="position">当前位置：{$positions}</div>
+       <div class="member_f">
+<form action="{$GLOBALS['WWW']}index.php?c=pay&a=buymolds&run=1&id={$id}&molds={$molds}" method="post">
+       <dl><dt>提示信息：</dt><dd><span style="font-size:16px; color:#06C; font-weight:bold">{$info['title']}</span></dd></dl>
+       <dl><dt>&nbsp;</dt><dd>查看本内容需要支付<span class="aggregate">{$info['mgold']}</span>元</dd></dl>
+       <dl><dt>您的账户余额：</dt><span class="aggregate">{$info['mgold']}</span>元</dl>
+       <dl style="border:0;"><dt>&nbsp;</dt><dd><input type="submit" value="确定购买" class="btnbig" /></dd></dl>
+</form>
+       </div>
+    </div>
+    </div>
+  </div>
+  <div class="tab12 mban"></div>
+</div>
+{include="bottom.html"}
+</body>
+</html>

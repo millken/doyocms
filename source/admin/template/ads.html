@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script type="text/javascript">
+function typeinfo(){
+	if($("#type").attr("value")==5){
+		$("#body").removeClass("none");
+		$("#gourl").addClass("none");
+	}else{
+		$("#body").addClass("none");
+		$("#gourl").removeClass("none");
+	}
+}
+</script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<?php if($Gets=='tadd' || $Gets=='tedit'){ ?>
+    <div class="main"><div class="oper"><?php echo $opers ?></div>
+        <div class="info">
+        <form action="?c=a_ads&a=<?php echo $postgo ?>&run=1" method="post">
+        <input name="taid" type="hidden" value="<?php echo $d['taid'] ?>" />
+        <dl><dt>广告位名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $d['name'] ?>" /></dd></dl>
+        <dl><dt>广告尺寸：</dt><dd>宽</dd><dd><input name="adsw" type="text" class="int" value="<?php echo $d['adsw'] ?>" style="width:30px" /> PX</dd><dd>高</dd><dd><input name="adsh" type="text" class="int" value="<?php echo $d['adsh'] ?>" style="width:30px" /> PX</dd></dl>
+        <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+        </form>
+        </div>
+    </div>
+<?php } ?>
+<?php if($Gets==''){ ?>
+    <div class="main"><div class="oper"><?php echo $opers ?></div>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td width="40">ID</td>
+        <td width="150">操作</td>
+        <td>广告位名称</td>
+        <td>广告位宽高</td>
+        <td width="220">广告位操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td><?php echo $v['taid']; ?></td>
+        <td><a href="?c=a_ads&a=add&taid=<?php echo $v['taid']; ?>">添加广告</a>&nbsp;&nbsp;<a href="?c=a_ads&a=adlist&taid=<?php echo $v['taid']; ?>">广告管理</a></td>
+        <td class="tdleft"><a href="?c=a_ads&a=adlist&taid=<?php echo $v['taid']; ?>"><?php echo $v['name']; ?></a></td>
+        <td><?php echo '宽：'.$v['adsw'].'PX&nbsp;&nbsp;高：'.$v['adsh'].'PX'; ?></td>
+        <td><a href="?c=a_ads&a=tedit&taid=<?php echo $v['taid']; ?>">编辑</a>&nbsp;&nbsp;<a href="?c=a_ads&a=tdel&taid=<?php echo $v['taid']; ?>">删除</a></td>
+      </tr>
+    <?php } ?>
+    </table>
+    </div>
+<?php } ?>
+<?php if($Gets=='add' || $Gets=='edit'){ ?>
+    <div class="main"><div class="oper"><?php echo $opers ?></div>
+        <div class="info">
+        <form action="?c=a_ads&a=<?php echo $postgo ?>&run=1" method="post">
+        <input name="id" type="hidden" value="<?php echo $d['id'] ?>" />
+        <dl><dt>广告位：</dt><dd><select name="taid">
+          <option>选择所属广告位</option>
+          <?php foreach($adstype as $v){ ?>
+          <option value="<?php echo $v['taid'] ?>"<?php if($d['taid']==$v['taid']||$ctaid==$v['taid'])echo ' selected="selected"'; ?>><?php echo $v['name'] ?></option>
+          <?php } ?>
+        </select></dd></dl>
+        <dl><dt>广告名称：</dt><dd><input name="name" type="text" class="int" value="<?php echo $d['name'] ?>" /></dd></dl>
+        <dl><dt>广告尺寸：</dt><dd>宽</dd><dd><input name="adsw" type="text" class="int" value="<?php echo $d['adsw'] ?>" style="width:30px" /> PX</dd><dd>高</dd><dd><input name="adsh" type="text" class="int" value="<?php echo $d['adsh'] ?>" style="width:30px" /> PX</dd><?php if($Gets=='add'){ ?><dd class="t">留空以广告位宽高为准</dd><?php } ?></dl>
+        <dl><dt>广告类型：</dt><dd><select name="type" id="type" onchange="typeinfo();">
+          <option value="1"<?php if($d['type']==1)echo ' selected="selected"'; ?>>图片</option>
+          <option value="2"<?php if($d['type']==2)echo ' selected="selected"'; ?>>FLASH</option>
+          <option value="3"<?php if($d['type']==3)echo ' selected="selected"'; ?>>文字</option>
+          <option value="4"<?php if($d['type']==4)echo ' selected="selected"'; ?>>视频</option>
+          <option value="5"<?php if($d['type']==5)echo ' selected="selected"'; ?>>自定义代码</option>
+        </select></dd></dl>
+        <dl><dt>上传文件：</dt><dd><input name="adfile" id="adfile" type="text" class="int" value="<?php echo $d['adfile'] ?>" /></dd><dd><iframe frameborder="0" width="300" height="26" scrolling="No" name="adfile" src="?c=uploads&a=loadup&inputid=adfile&fileExt=*.jpg;*.jpeg;*.gif;*.png&fileover=1"></iframe></dd></dl>
+        <dl id="gourl" <?php if($d['type']==5)echo 'class="none"'; ?>><dt>链接地址：</dt><dd><input name="gourl" type="text" class="int" value="<?php echo $d['gourl'] ?>" /></dd><dd><input name="target" type="radio" value="blank" <?php if($d['target']=='blank' || $d['target']=='')echo 'checked="checked"'; ?> />新窗口 <input name="target" type="radio" value="self" <?php if($d['target']=='self')echo 'checked="checked"'; ?> />原窗口</dd></dl>
+        <dl id="body" <?php if($d['type']!=5)echo 'class="none"'; ?>><dt>自定义代码：</dt><dd><textarea name="body" style="width:400px; height:100px;" class="int"><?php echo $d['body'] ?></textarea></dd></dl>
+        <dl><dt>排序：</dt><dd><input name="orders" type="text" class="int" style="width:30px;" value="<?php if($d!=''){echo $d['orders'];}else{echo '0';} ?>" /></dd><dd class="t">越大越靠前</dd></dl>
+        <dl><dt>状态：</dt><dd><input name="isshow" type="radio" value="1"<?php if($d['isshow']==1||$Gets=='add')echo ' checked="checked"'; ?> />显示&nbsp;<input name="isshow" type="radio" value="0"<?php if($d['isshow']==0 && $Gets=='edit')echo ' checked="checked"'; ?> />关闭</dd></dl>
+        <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+        </form>
+        </div>
+    </div>
+<?php } ?>
+<?php if($Gets=='adlist'){ ?>
+    <div class="main"><div class="oper"><?php echo $opers ?></div>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td width="40">ID</td>
+        <td width="200">广告位</td>
+        <td>广告名称</td>
+        <td>广告宽高</td>
+        <td width="220">操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td><?php echo $v['id']; ?></td>
+        <td><?php echo adstype($v['taid']); ?></td>
+        <td class="tdleft"><a href="?c=a_ads&a=edit&id=<?php echo $v['id']; ?>"><?php echo $v['name']; ?></a></td>
+        <td><?php echo '宽：'.$v['adsw'].'PX&nbsp;&nbsp;高：'.$v['adsh'].'PX'; ?></td>
+        <td><a href="?c=a_ads&a=edit&id=<?php echo $v['id']; ?>">编辑</a>&nbsp;&nbsp;<a href="?c=a_ads&a=del&id=<?php echo $v['id']; ?>">删除</a></td>
+      </tr>
+    <?php } ?>
+    </table>
+    </div>
+<?php } ?>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><a href="?c=a_fields&molds=<?php echo $molds; ?>&tid=<?php echo $tid;?>">字段管理</a><a href="?c=a_fields&a=add&molds=<?php echo $molds; ?>&tid=<?php echo $tid;?>">添加字段</a></div>
+
+<ul class="switchs"><li id="s1">基本设置</li><?php if($molds!='member'){?><li id="s2" class="c">选择开启本字段的栏目</li><?php }?></ul>
+	<div class="info">
+    <form action="?c=a_fields&a=<?php echo $postgo ?>&molds=<?php echo $molds ?>&tid=<?php echo $tid;?>&run=1" method="post">
+    <input name="fid" type="hidden" value="<?php echo $fields['fid'] ?>" />
+    <div id="infos1">
+    <dl style="border:0;"><dt>字段名称：</dt><dd><input name="fieldsname" type="text" class="int" maxlength="30" value="<?php echo $fields['fieldsname'] ?>" /></dd>
+    <dd>排序：</dd><dd><input name="fieldorder" type="text" class="int" style="width:30px;" value="<?php echo $fields['fieldorder'] ?>" /></dd><dd class="t">越大越靠前</dd></dl>
+    <dl><dt>字段标识：</dt><dd><input name="fields" type="text" class="int" style="width:150px;" maxlength="20"  value="<?php echo $fields['fields'] ?>"/></dd><dd class="t">必须为英文和数字，并且只能以英文开头，长度20以内</dd></dl>
+    <?php if(funsinfo('member','isshow')==1 && $molds!='member'){ ?>
+    <dl><dt>投稿可填：</dt><dd><input <?php if($fields['issubmit']==1 || $fields['issubmit']==''){echo 'checked="checked"';} ?> name="issubmit" type="radio" value="1" />是 <input <?php if($fields && $fields['issubmit']==0){echo 'checked="checked"';} ?> name="issubmit" type="radio" value="0" />否</dd><dd class="t">前台会员投稿是否显示此字段</dd></dl>
+    <?php }else{ ?><input name="issubmit" type="hidden" value="1" /><?php } ?>
+    <dl><dt><?php if($molds=='member'){echo '是否注册显示';}else{echo '前台列表调用';} ?>：</dt><dd><input <?php if($fields['lists']==0 || $fields['lists']==''){echo 'checked="checked"';} ?> name="lists" type="radio" value="0" />关闭 <input <?php if($fields && $fields['lists']==1){echo 'checked="checked"';} ?> name="lists" type="radio" value="1" />开启</dd><dd class="t"><?php if($molds=='member'){echo '开启后，会员注册时显示此字段';}else{echo '开启后，前台列表可直接读取本字段，否则只在内容页读取，列表读取字段过多会影响查询效率';} ?></dd></dl>
+    <dl><dt>字段类型：</dt><dd>
+    <table width="100%" class="tablist1">
+        <tr><td>
+        <table width="100%"><tr>
+            <td style="border:0;padding:0"><input <?php if($fields['fieldstype']=='varchar'||$postgo=='add'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="varchar" value="varchar" /><label for="varchar">中小型文本varchar</label>：</td>
+            <td style="border:0;padding:0">中小型文本，小于等于255显示单行输入框，大于255显示多行输入框。<br />最大长度 <input name="fieldslong" type="text" style="width:30px; padding:2px;"  value="<?php if($fields['fieldslong']!=0){echo $fields['fieldslong'];}else{echo '255';} ?>" maxlength="5"/> 显示宽 <input name="varchar_imgw" type="text" value="<?php if($postgo=='add'){echo 300;}else{if($fields['fieldstype']=='varchar')echo $fields['imgw'];} ?>" style="width:30px;"/> px 显示高 <input name="varchar_imgh" type="text" value="<?php if($postgo=='add'){echo 80;}else{if($fields['fieldstype']=='varchar')echo $fields['imgh'];} ?>" style="width:30px;"/> px</td>
+          </tr>
+        </table>
+		</td>
+        </tr>
+      <tr>
+        <td><input <?php if($fields['fieldstype']=='text'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="text" value="text" /><label for="text">大型文本</label>：输入框带编辑器大型文本输入框，如文章内容等。显示宽 <input name="text_imgw" type="text" value="<?php if($postgo=='add'){echo 670;}else{if($fields['fieldstype']=='text')echo $fields['imgw'];} ?>" style="width:30px;"/> px 显示高 <input name="text_imgh" type="text" value="<?php if($postgo=='add'){echo 300;}else{if($fields['fieldstype']=='text')echo $fields['imgh'];} ?>" style="width:30px;"/> px</td>
+        </tr>
+      <tr>
+        <td><input <?php if($fields['fieldstype']=='int'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="int" value="int" /><label for="int">整数</label>：正负整数类型字段，不含小数部分。如123456789，如需要使用非货币小数类型，请选择小型文本。</td>
+        </tr>
+      <tr>
+        <td><input <?php if($fields['fieldstype']=='decimal'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="decimal" value="decimal" /><label for="decimal">货币</label>：价格类型字段。如1.02</td>
+        </tr>
+      <tr>
+        <td><input <?php if($fields['fieldstype']=='time'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="time" value="time" /><label for="time">日期格式</label>：使用日期选择框输入日期。</td>
+      </tr>
+      <tr>
+        <td><table width="100%">
+          <tr>
+            <td width="310" style="border:0;padding:0"><input <?php if($fields['fieldstype']=='files'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="files" value="files" /><label for="files">单个附件</label>：上传类型字段（如图片、文档等）。<br /><input <?php if($fields['fieldstype']=='fileall'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="fileall" value="fileall" /><label for="fileall">多个附件</label>：可上传多个附件。
+</td>
+            <td style="border:0;padding:0">自动缩略图：宽 <input name="imgw" type="text" value="<?php if($fields['fieldstype']=='files'||$fields['fieldstype']=='fileall')echo $fields['imgw'] ?>" style="width:30px;"/> px 高 <input name="imgh" type="text" value="<?php if($fields['fieldstype']=='files'||$fields['fieldstype']=='fileall')echo $fields['imgh'] ?>" style="width:30px;"/> px<br />
+自动缩略图设置仅对图片类附件有效，0代表继承系统设置</td>
+            </tr>
+          </table></td>
+        </tr>
+        <?php if($molds!='member'){?>
+      <tr>
+        <td><input <?php if($fields['fieldstype']=='fileall'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="fileall" value="fileall" /><label for="fileall">多个附件</label>：可上传多个附件。</td>
+        </tr>
+        <?php }?>
+      <tr>
+        <td><table width="100%">
+          <tr>
+            <td width="90" style="border:0;padding:0"><input <?php if($fields['fieldstype']=='select'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="select" value="select" /><label for="select">单选菜单</label>：<br /><input <?php if($fields['fieldstype']=='checkbox'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="checkbox" value="checkbox" /><label for="checkbox">多选菜单</label>：</td>
+            <td style="border:0;padding:0">
+<textarea rows="2" name="selects" style="width:450px;"><?php if($fields['selects']!=''){echo $fields['selects'];}else{?>
+选项1=值1,选项2=值2<?php } ?></textarea><br />格式："选项=值"，每个选项用英文逗号分割</td>
+            </tr>
+          </table>
+          </td>
+      </tr>
+      <tr>
+        <td><input <?php if($fields['fieldstype']=='contingency'){echo 'checked="checked"';} ?> type="radio" name="fieldstype" id="contingency" value="contingency" /><label for="contingency">内容关联</label>：<select name="contingency">
+    	<option value=''>选择关联频道</option>
+        <?php 
+		$contingency=syDB('molds')->findAll(array('isshow'=>1));
+        foreach($contingency as $c){
+        ?>
+        <option value="<?php echo $c['molds']; ?>" <?php if($fields['contingency']==$c['molds']){echo 'selected="selected"';}?>><?php echo $c['moldname']; ?></option>
+        <?php } ?>
+    </select> 可关联指定频道下任意内容</td>
+        </tr>
+    </table>
+    </dd></dl>
+    <dl><dt>字段状态：</dt><dd><input <?php if($fields['fieldshow']==1 || $fields['fieldshow']==''){echo 'checked="checked"';} ?> name="fieldshow" type="radio" value="1" />启用 <input <?php if($fields && $fields['fieldshow']==0){echo 'checked="checked"';} ?> name="fieldshow" type="radio" value="0" />禁用</dd></dl>
+    </div>
+    <div id="infos2" class="none">
+    <dl style="border:0;"><dt>所属栏目：</dt><dd><input id="alltype" type="button" value="全选" class="btnmini" onclick="alls('types[]','alltype');" style="padding:0" /></dd><dd class="t">选择此字段在哪些栏目启用(可多选)</dd></dl>
+    <dl><dt>&nbsp;</dt><dd>
+    <?php foreach($typesdb as $v){
+    if($v['molds']==$molds){
+    ?>
+        <?php if($v['n']>0){echo '|';}echo str_repeat('--',$v['n']);?><label><input type="checkbox" name="types[]" value="<?php echo $v['tid']; ?>" id="id_<?php echo $v['tid']; ?>" <?php if(strpos($fields['types'],'|'.$v['tid'].'|')!==FALSE||strpos(','.$types->leafid($tid).',',','.$v['tid'].',')!==FALSE)echo 'checked="checked" '; ?>  onclick="checkboxs('#id_<?php echo $v['tid'];?>','<?php echo $types->leafid($v['tid']);?>','id_');"/><?php echo $v['name'];?></label><br />
+	<?php }} ?>
+    </dd>
+    </dl>
+    </div>
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+</div>
+</body>
+</html>

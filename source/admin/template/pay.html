@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main"><div class="oper"><a href="?c=a_pay">财务记录</a><a href="?c=a_pay&a=accountadd">手工录入款项</a><a href="?c=a_pay&a=paymentlist">支付平台</a></div>
+
+<?php if($Gets==''){ ?>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td>类型</td>
+        <td width="120">用户</td>
+        <td width="120">金额</td>
+        <td width="130">时间</td>
+        <td width="80">操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td class="tdleft" style="line-height:150%"><?php echo syClass('syaccount')->info($v);if(in_array($v['type'],array(2,6))&&$v['custom'])echo '<br>备注：'.$v['custom']; ?></td>
+        <td><?php echo memberinfo($v['uid'],'user') ?></td>
+        <td style=" font-weight:bold;"><?php echo $v['pn'].$v['money']; ?></td>
+        <td><?php echo date('Y-m-d H:i',$v['addtime']); ?></td>
+        <td><a href="?c=a_pay&a=accountdel&id=<?php echo $v['id']; ?>">删除</a></td>
+      </tr>
+    <?php } ?>
+    </table>
+    <table width="100%"><tr><td height="35"><ul class="pages"><?php echo $pages; ?></ul></td></tr></table>
+<?php } ?>
+<?php if($Gets=='accountadd'){ ?>
+        <div class="info">
+        <form action="?c=a_pay&a=accountadd&run=1" method="post">
+        <dl><dt>类型：</dt><dd><select name="type">
+          <?php syClass('syaccount')->option(); ?>
+        </select></dd></dl>
+        <dl><dt>用户名称：</dt><dd><input name="member" value="<?php echo $user['user']; ?>"  type="text" class="int" /></dd><dd class="t">注意：请输入完整用户名称</dd></dl>
+        <dl><dt>金额：</dt><dd><input name="money"  type="text" class="int" style="width:80px;" /> 元</dd><dd class="t">无须输入加减号，类型为入款则增加，为扣款则减少。</dd></dl>
+        <dl><dt>备注：</dt><dd><textarea name="custom" style="width:300px; height:50px;" class="int"></textarea></dd><dd class="t">仅后台可见，可以填写相关信息备忘。</dd></dl>
+        <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+        </form>
+        </div>
+    </div>
+<?php } ?>
+<?php if($Gets=='paymentlist'){ ?>
+    <table width="100%" class="tablist">
+      <tr class="trbg">
+        <td width="160">名称</td>
+        <td width="100">状态</td>
+        <td>说明</td>
+        <td width="150">操作</td>
+      </tr>
+    <?php foreach($lists as $v){ ?>
+      <tr>
+        <td><a href="?c=a_pay&a=paymentedit&id=<?php echo $v['id']; ?>"><?php echo $v['name']; ?></a></td>
+        <td><?php if($v['isshow']==1){echo '开启';}else{echo '关闭';} ?></td>
+        <td class="tdleft"><?php echo $v['body']; ?></td>
+        <td><a href="?c=a_pay&a=paymentedit&id=<?php echo $v['id']; ?>">编辑</a></td>
+      </tr>
+    <?php } ?>
+    </table>
+    <table width="100%"><tr><td height="35"><ul class="pages"><?php echo $pages; ?></ul></td></tr></table>
+<?php } ?>
+<?php if($Gets=='paymentedit'){ ?>
+        <div class="info">
+        <form action="?c=a_pay&a=paymentedit&run=1" method="post">
+        <input name="id" type="hidden" value="<?php echo $d['id'] ?>" />
+        <dl><dt>支付平台：</dt><dd><?php echo $d['name'] ?></dd></dl>
+        <dl><dt>状态：</dt><dd><input name="isshow" type="radio" value="1"<?php if($d['isshow']==1)echo ' checked="checked"'; ?> />开启&nbsp;<input name="isshow" type="radio" value="0"<?php if($d['isshow']!=1)echo ' checked="checked"'; ?> />关闭</dd></dl>
+	<?php 
+	$keyv=unserialize($d['keyv']);
+	foreach(unserialize($d['key']) as $k=>$v){
+	switch($d['pay'].'_'.$k){
+		case 'alipay_service':
+        ?>
+        <dl><dt><?php echo $v; ?>：</dt><dd><select name="keyv[<?php echo $k; ?>]">
+        <option value="1"<?php if($keyv[$k]==1)echo ' selected="selected"'; ?>>即时到帐</option>
+          <option value="2"<?php if($keyv[$k]==2)echo ' selected="selected"'; ?>>担保交易</option>
+        </select></dd><dd class="t">请准确选择您的支付宝签约接口类型</dd></dl>
+        <?php
+        break;
+        case 'tenpay_service':
+        ?>
+        <dl><dt><?php echo $v; ?>：</dt><dd><select name="keyv[<?php echo $k; ?>]">
+        <option value="1"<?php if($keyv[$k]==1)echo ' selected="selected"'; ?>>即时到帐</option>
+          <option value="2"<?php if($keyv[$k]==2)echo ' selected="selected"'; ?>>中介担保</option>
+        </select></dd><dd class="t">请选择财付通签约接口类型，注意：财付通中介担保没有确认发货接口，发货后需要手工登陆财付通修改。</dd></dl>
+        <?php
+        break;
+		default:
+        if($k=='key'){
+            $vi=dykeycode($keyv[$k]);
+            $vi=dykey_x($vi);
+        }else{$vi=$keyv[$k];}
+        ?>
+        <dl><dt><?php echo $v; ?>：</dt><dd><input name="keyv[<?php echo $k; ?>]" type="text" class="int" style="width:280px;" value="<?php echo $vi; ?>" /></dd>
+        <?php if($k=='key'){echo '<dd class="t">安全起见，key只显示部分字符，如需修改请完整输入</dd>';}?>
+        </dl>
+	<?php break;}
+	}?>
+    	<dl><dt>排序：</dt><dd><input name="orders" type="text" class="int" style="width:30px;" value="<?php if($d!=''){echo $d['orders'];}else{echo '0';} ?>" /></dd><dd class="t">越大越靠前</dd></dl>
+        <dl><dt>平台说明：</dt><dd><?php echo $d['body'] ?></dd></dl>
+        <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+        </form>
+        </div>
+<?php } ?>
+</body>
+</html>

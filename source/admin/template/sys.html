@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="source/admin/template/style/admin.css" rel="stylesheet" type="text/css" />
+<script src="include/js/jsmain.js" type="text/javascript"></script>
+<script src="include/js/admin.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="maintop">当前位置：<?php echo $toptxt ?></div>
+<div class="main">
+<?php if($a==''){ ?>
+<ul class="switchs"><li id="s1">基本</li><li id="s2" class="c">上传</li><li id="s3" class="c">其他</li><li id="s4" class="c">伪静态</li><li id="s5" class="c">邮件</li></ul>
+	<div class="info">
+    <form action="?c=a_sys&run=1" method="post">
+    <div id="infos1">
+    <dl style="border:0;"><dt>网站地址：</dt><dd><input name="http_path" type="text" class="int" value="<?php echo $d['http_path'] ?>" /></dd></dl>
+    <dl><dt>网站名称：</dt><dd><input name="site_title" type="text" class="int" value="<?php echo $d['site_title'] ?>" /></dd></dl>
+    <dl><dt>首页关键词：</dt><dd><input name="site_keywords" type="text" class="int" value="<?php echo $d['site_keywords'] ?>" /></dd><dd class="t">显示于首页 meta keywords</dd></dl>
+    <dl><dt>首页简介：</dt><dd><textarea name="site_description" class="int" style="width:300px; height:50px;"><?php echo $d['site_description'] ?></textarea></dd><dd class="t">显示于首页 meta description</dd></dl>
+    <dl><dt>默认模板：</dt><dd><input name="view_themes" type="text" class="int" value="<?php echo $d['view_themes'] ?>" style="width:60px;"/></dd><dd class="t">填写风格目录，位于template目录下</dd></dl>
+    <dl><dt>调试模式：</dt><dd><label><input type="radio" name="cache_auto" value="1"<?php if($d['cache_auto']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="cache_auto" value="0"<?php if($d['cache_auto']==0)echo ' checked="checked"' ?> />关闭</label></dd></dl>
+    <dl><dt>&nbsp;</dt><dd class="t">开启调试模式将关闭模板缓存，便于调试模板。正式运行请关闭，关闭后提升效率约1倍</dd></dl>
+     <dl><dt>PHP错误提示：</dt><dd><label><input type="radio" name="mode" value="debug"<?php if($inc['mode']=='debug')echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="mode" value="0"<?php if($inc['mode']!='debug')echo ' checked="checked"' ?> />关闭</label></dd></dl>
+    <dl><dt>&nbsp;</dt><dd class="t">如运行出现未知情况，可开启PHP错误提示查看详情，正式运行请关闭提示，提高安全性。</dd></dl>
+    </div>
+    
+    <div id="infos2" class="none">
+    <dl style="border:0;"><dt>允许上传类型：</dt><dd><input name="filetype" type="text" class="int" value="<?php echo $d['filetype'] ?>" style="width:300px;"/></dd><dd class="t">多个类型用,分割</dd></dl>
+    <dl><dt>允许最大上传：</dt><dd><input name="filesize" type="text" class="int" value="<?php echo round($d['filesize']/1024) ?>" style="width:60px;"/> K</dd></dl>
+    <dl style="border:2px;"><dt>自动缩略图：</dt><dd><label><input type="radio" name="imgcaling" value="1"<?php if($d['imgcaling']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="imgcaling" value="0"<?php if($d['imgcaling']==0)echo ' checked="checked"' ?> />关闭</label></dd><dd class="t">开启后全站上传图片均会自动缩略</dd></dl>
+    <dl><dt>自动缩略图：</dt><dd>宽</dd><dd><input name="img_w" type="text" class="int" value="<?php echo $d['img_w'] ?>" style="width:30px;"/> px</dd><dd>高</dd><dd><input name="img_h" type="text" class="int" value="<?php echo $d['img_h'] ?>" style="width:30px;"/> px</dd><dd class="t">全站编辑器内图片上传超过此大小自动缩略</dd></dl>
+    <dl style="border:2px;"><dt>自动水印：</dt><dd><label><input type="radio" name="imgwater" value="1"<?php if($d['imgwater']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="imgwater" value="0"<?php if($d['imgwater']==0)echo ' checked="checked"' ?> />关闭</label></dd></dl>
+    <dl><dt>水印位置：</dt><dd><label><input type="radio" name="imgwater_t" value="1"<?php if($d['imgwater_t']==1)echo ' checked="checked"' ?> />左下</label>&nbsp;<label><input type="radio" name="imgwater_t" value="2"<?php if($d['imgwater_t']==2)echo ' checked="checked"' ?> />右下</label>&nbsp;<label><input type="radio" name="imgwater_t" value="3"<?php if($d['imgwater_t']==3)echo ' checked="checked"' ?> />左上</label>&nbsp;<label><input type="radio" name="imgwater_t" value="4"<?php if($d['imgwater_t']==4)echo ' checked="checked"' ?> />右上</label>&nbsp;</dd></dl>
+    <dl><dt>&nbsp;</dt><dd>水印图片位置"include/water.png"</dd></dl>
+    </div>
+    
+    <div id="infos3" class="none">
+    <dl style="border:0;"><dt>静态生成：</dt><dd><label><input type="radio" name="site_html" value="1"<?php if($d['site_html']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="site_html" value="0"<?php if($d['site_html']==0)echo ' checked="checked"' ?> />关闭</label></dd><dd class="t">栏目静态生成不受此设置影响</dd></dl>
+    <dl><dt>静态文件目录：</dt><dd><input name="site_html_dir" type="text" class="int" value="<?php echo $d['site_html_dir'] ?>" style="width:60px;"/></dd><dd class="t">相对于系统目录</dd></dl>
+    <dl><dt>静态生成规则：</dt><dd><input name="site_html_rules" type="text" class="int" value="<?php echo $d['site_html_rules'] ?>" style="width:200px;"/></dd><dd class="t">仅针对内容生成，注意目录请用“/”分割，栏目规则请在栏目设置中修改</dd></dl>
+    <dl><dt>&nbsp;</dt>
+    <dd class="t">规则可用参数：年<span>[y]</span>&nbsp;&nbsp;月<span>[m]</span>&nbsp;&nbsp;日<span>[d]</span>&nbsp;&nbsp;频道<span>[mold]</span>&nbsp;&nbsp;栏目目录<span>[type]</span>&nbsp;&nbsp;内容ID<span>[id]</span>&nbsp;，&nbsp;内容文件名<span>[file]</span></dd></dl>
+    <dl><dt>省略index：</dt><dd><label><input type="radio" name="site_html_index" value="1"<?php if($d['site_html_index']==1)echo ' checked="checked"' ?> />是</label>&nbsp;<label><input type="radio" name="site_html_index" value="0"<?php if($d['site_html_index']==0)echo ' checked="checked"' ?> />否</label></dd><dd class="t">选择是，则静态url中将省略index.html</dd></dl>
+    <dl><dt>缓存时间：</dt><dd><input name="cache_time" type="text" class="int" value="<?php echo $d['cache_time'] ?>" style="width:60px;"/></dd><dd class="t">数据缓存时间，单位秒，输入0表示关闭缓存</dd></dl>
+    <dl><dt>GZip压缩：</dt><dd><label><input type="radio" name="enable_gzip" value="1"<?php if($d['enable_gzip']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="enable_gzip" value="0"<?php if($d['enable_gzip']==0)echo ' checked="checked"' ?> />关闭</label></dd><dd>压缩级别 <input name="enable_gzip_level" type="text" class="int" value="<?php echo $d['enable_gzip_level'] ?>" style="width:20px;"/></dd><dd class="t">压缩级别1—9,越大压缩率越高，相应兼容越差</dd></dl>
+    <dl><dt>验证码：</dt><dd><label><input type="radio" name="vercode" value="1"<?php if($inc['vercode']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="vercode" value="0"<?php if($inc['vercode']!=1)echo ' checked="checked"' ?> />关闭</label></dd><dd><img src="include/vercode.php" width="58" height="25"/></dd><dd class="t">如无法看到左图验证码，请关闭验证码功能</dd></dl>
+    <?php if(funsinfo('comment','isshow')==1){ ?>
+    <dl><dt>评论需审核：</dt><dd><label><input type="radio" name="comment_audit" value="1"<?php if($d['comment_audit']==1)echo ' checked="checked"' ?> />是</label>&nbsp;<label><input type="radio" name="comment_audit" value="0"<?php if($d['comment_audit']==0)echo ' checked="checked"' ?> />否</label></dd></dl>
+    <dl><dt>评论限制：</dt><dd><label><input type="radio" name="comment_user" value="1"<?php if($d['comment_user']==1)echo ' checked="checked"' ?> />仅登录会员</label>&nbsp;<label><input type="radio" name="comment_user" value="0"<?php if($d['comment_user']==0)echo ' checked="checked"' ?> />所有人</label></dd></dl>
+    <?php }else{ ?><input name="comment_audit" type="hidden" value="1" /><input name="comment_user" type="hidden" value="1" /><?php } ?>
+    </div>
+    
+    <div id="infos4" class="none">
+    <dl style="border:0;"><dt>伪静态：</dt><dd><label><input type="radio" name="rewrite_open" value="1"<?php if($r['rewrite_open']==1)echo ' checked="checked"' ?> />开启</label>&nbsp;<label><input type="radio" name="rewrite_open" value="0"<?php if($r['rewrite_open']==0)echo ' checked="checked"' ?> />关闭</label></dd></dl>
+    <dl><dt>系统根目录：</dt><dd><input name="rewrite_dir" type="text" class="int" value="<?php echo $r['rewrite_dir'] ?>" style="width:100px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>如你的网站访问地址是http://wdoyo.com/doyo/，这里就填写/doyo/，如果系统放在根目录则无需修改</dd></dl>
+    
+    <dl><dt><?php echo moldsinfo('article','moldname');?>URL：</dt><dd><input name="rewrite_article" type="text" class="int" value="<?php echo $r['rewrite_article'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>ID：{id}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页：{page}&nbsp;&nbsp;频道(必须)：{article}</dd></dl>
+    
+    <dl><dt><?php echo moldsinfo('article','moldname');?>栏目URL：</dt><dd><input name="rewrite_article_type" type="text" class="int" value="<?php echo $r['rewrite_article_type'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>栏目ID：{tid}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页(必须)：{page}&nbsp;&nbsp;频道标识(必须)：{article}&nbsp;&nbsp;栏目标识(必须)：{type}</dd></dl>
+    
+    <dl><dt><?php echo moldsinfo('product','moldname');?>URL：</dt><dd><input name="rewrite_product" type="text" class="int" value="<?php echo $r['rewrite_product'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>ID：{id}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页：{page}&nbsp;&nbsp;频道(必须)：{product}</dd></dl>
+    
+    <dl><dt><?php echo moldsinfo('product','moldname');?>栏目URL：</dt><dd><input name="rewrite_product_type" type="text" class="int" value="<?php echo $r['rewrite_product_type'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>栏目ID：{tid}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页(必须)：{page}&nbsp;&nbsp;频道标识(必须)：{product}&nbsp;&nbsp;栏目标识(必须)：{type}</dd></dl>
+  
+
+    <dl><dt>自定义频道URL：</dt><dd><input name="rewrite_channel" type="text" class="int" value="<?php echo $r['rewrite_channel'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>ID：{id}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页：{page}&nbsp;&nbsp;频道(必须)：{channel}&nbsp;&nbsp;频道标识(必须)：{molds}</dd></dl>
+    
+    <dl><dt>自定义频道栏目URL：</dt><dd><input name="rewrite_channel_type" type="text" class="int" value="<?php echo $r['rewrite_channel_type'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>栏目ID：{tid}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页(必须)：{page}&nbsp;&nbsp;频道(必须)：{channel}&nbsp;&nbsp;栏目标识(必须)：{type}</dd></dl>
+
+    
+    <dl><dt><?php echo moldsinfo('message','moldname');?>栏目URL：</dt><dd><input name="rewrite_message_type" type="text" class="int" value="<?php echo $r['rewrite_message_type'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>栏目ID：{tid}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;分页(必须)：{page}&nbsp;&nbsp;频道(必须)：{message}</dd></dl>
+    
+    <dl><dt>专题URL：</dt><dd><input name="rewrite_special" type="text" class="int" value="<?php echo $r['rewrite_special'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>专题ID：{sid}&nbsp;&nbsp;文件名：{file}&nbsp;&nbsp;专题分页(必须)：{page}&nbsp;&nbsp;频道(必须)：{special}</dd></dl>
+    
+    <dl><dt>自定义页面URL：</dt><dd><input name="rewrite_labelcus_custom" type="text" class="int" value="<?php echo $r['rewrite_labelcus_custom'] ?>" style="width:250px;"/></dd></dl>
+    <dl><dt>&nbsp;</dt><dd>自定义页面文件名(必须)：{file}</dd></dl>
+    
+    <dl><dt>&nbsp;</dt><dd><a href="?c=a_sys&a=rewrite&article=<?php echo $r['rewrite_article'] ?>&article_type=<?php echo $r['rewrite_article_type'] ?>&product=<?php echo $r['rewrite_product'] ?>&product_type=<?php echo $r['rewrite_product_type'] ?>&channel=<?php echo $r['rewrite_channel'] ?>&channel_type=<?php echo $r['rewrite_channel_type'] ?>&message_type=<?php echo $r['rewrite_message_type'] ?>&special=<?php echo $r['rewrite_special'] ?>&labelcus_custom=<?php echo $r['rewrite_labelcus_custom'] ?>" target="_blank" style=" font-size:14px; font-weight:bold;">生成伪静态规则</a> (如修改过规则，请先提交保存)</dd></dl>
+    </div>
+    
+    <div id="infos5" class="none">
+    <?php $sendmail=unserialize($sysconfig['sendmail']); ?>
+    <dl style="border:0;"><dd class="t">以下设置为邮件发送配置，用于涉及发送邮件功能使用,如“找回密码”等。</dd></dl>
+    <dl><dt>smtp地址：</dt><dd><input name="sendmail[smtp]" type="text" class="int" value="<?php echo $sendmail['smtp'] ?>" style="width:200px;"/></dd><dd class="t">如 smtp.qq.com</dd></dl>
+    <dl><dt>发信邮箱：</dt><dd><input name="sendmail[mail]" type="text" class="int" value="<?php echo $sendmail['mail'] ?>" style="width:200px;"/></dd><dd class="t">如 yourmail@yourdomain.com</dd></dl>
+    <dl><dt>邮箱密码：</dt><dd><input name="sendmail[pass]" type="password" class="int" value="<?php echo $sendmail['pass'] ?>" style="width:200px;"/></dd><dd class="t"></dd></dl>
+    <dl><dt>发信人称呼：</dt><dd><input name="sendmail[name]" type="text" class="int" value="<?php echo $sendmail['name'] ?>" style="width:100px;"/></dd><dd class="t">发信人简称，如“某某网站”，请尽量简短。</dd></dl>
+    <dl><dt>&nbsp;</dt><dd><a href="?c=a_sys&a=toemail" target="_blank">发送测试邮件</a></dd><dd class="t">请先提交保存后测试</dd></dl>
+    </div>
+    
+    <dl><dt>&nbsp;</dt><dd><input type="submit" value="提 交" class="btnbig" /></dd></dl>
+    </form>
+    </div>
+
+
+<?php } ?>
+<?php if($a=='ecache'){ ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><br /><br /><br /><br />
+    <form action="?c=a_sys&a=ecache&run=1" method="post">
+    <label><input name="tpl" type="checkbox" value="1" checked="checked" />更新模板缓存</label>&nbsp;&nbsp;&nbsp;&nbsp;<label><input name="tmp" type="checkbox" value="1" checked="checked" />更新数据缓存</label><br /><br /><br /><input type="submit" value="提 交" class="btnbig" />
+    </form></td>
+  </tr>
+</table>
+<?php } ?>
+</div>
+</body>
+</html>
